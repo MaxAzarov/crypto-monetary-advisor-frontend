@@ -8,8 +8,14 @@ import {
   ListItemIcon,
 } from "@mui/material";
 import { Home, AccountBalanceWallet } from "@mui/icons-material";
+import { useWallets } from "../../../hooks/wallets/useWallets";
+import { formatAddress } from "../../../helpers/formatAddress";
+import { useAddWalletModal } from "../../../modals/wallets/AddWallet/AddWallet.hooks";
 
 export function PortfolioScreen() {
+  const { wallets } = useWallets({});
+  const { openAddWalletModal, closeAddWalletModal } = useAddWalletModal();
+
   return (
     <Box style={{ display: "flex", padding: "10px", height: "100%" }}>
       <Box style={{ flexBasis: "30%" }}>
@@ -22,32 +28,31 @@ export function PortfolioScreen() {
             <Typography variant="caption">$61.83</Typography>
           </ListItem>
           <Typography variant="h6" mt={2}>
-            My portfolios (3)
+            My portfolios {wallets.length > 0 ? <>({wallets.length})</> : <></>}
           </Typography>
           <List>
-            <ListItem component="div">
-              <ListItemIcon>
-                <AccountBalanceWallet />
-              </ListItemIcon>
-              <ListItemText primary="0x55...00c2" />
-              <Typography variant="caption">$0</Typography>
-            </ListItem>
-            <ListItem component="div">
-              <ListItemIcon>
-                <AccountBalanceWallet />
-              </ListItemIcon>
-              <ListItemText primary="test" />
-              <Typography variant="caption">$0</Typography>
-            </ListItem>
-            <ListItem component="div">
-              <ListItemIcon>
-                <AccountBalanceWallet />
-              </ListItemIcon>
-              <ListItemText primary="Binance Portfolio" />
-              <Typography variant="caption">$61.83</Typography>
-            </ListItem>
+            {wallets.map((wallet) => (
+              <ListItem component="div" key={wallet.id}>
+                <ListItemIcon>
+                  <AccountBalanceWallet />
+                </ListItemIcon>
+                <ListItemText primary={formatAddress(wallet.accountAddress)} />
+                <Typography variant="caption">$0</Typography>
+              </ListItem>
+            ))}
           </List>
-          <Button variant="contained" color="primary" fullWidth>
+          <Button
+            variant="contained"
+            color="primary"
+            fullWidth
+            onClick={() =>
+              openAddWalletModal({
+                onSuccess: () => {
+                  closeAddWalletModal();
+                },
+              })
+            }
+          >
             Create portfolio
           </Button>
         </Box>

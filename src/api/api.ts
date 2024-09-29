@@ -2,10 +2,12 @@ import { createAxiosInstance, GetApiFunc } from "./base";
 import { createAuthApi } from "./auth/authApi";
 import { appStorage } from "../services/appStorage";
 import { Config } from "../config";
+import { createWalletsApi } from "./wallets/walletsApi";
 
 function createApi(getAxiosInstance: GetApiFunc) {
   return {
     ...createAuthApi(getAxiosInstance),
+    ...createWalletsApi(getAxiosInstance),
   };
 }
 
