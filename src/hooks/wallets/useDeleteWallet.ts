@@ -21,7 +21,7 @@ export const useDeleteWallet = () => {
     async (data) => {
       const response = await Api.deleteWallet(data);
 
-      queryclient.invalidateQueries(cacheKeys.getWallet(data.id));
+      queryclient.invalidateQueries(cacheKeys.getWallets());
 
       return response;
     },

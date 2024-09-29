@@ -11,10 +11,12 @@ import { Home, AccountBalanceWallet } from "@mui/icons-material";
 import { useWallets } from "../../../hooks/wallets/useWallets";
 import { formatAddress } from "../../../helpers/formatAddress";
 import { useAddWalletModal } from "../../../modals/wallets/AddWallet/AddWallet.hooks";
+import { useViewWalletModal } from "../../../modals/wallets/ViewWallet/ViewWallet.hooks";
 
 export function PortfolioScreen() {
   const { wallets } = useWallets({});
   const { openAddWalletModal, closeAddWalletModal } = useAddWalletModal();
+  const { openWalletBillModal } = useViewWalletModal();
 
   return (
     <Box style={{ display: "flex", padding: "10px", height: "100%" }}>
@@ -32,7 +34,11 @@ export function PortfolioScreen() {
           </Typography>
           <List>
             {wallets.map((wallet) => (
-              <ListItem component="div" key={wallet.id}>
+              <ListItem
+                component="div"
+                key={wallet.id}
+                onClick={() => openWalletBillModal({ id: wallet.id })}
+              >
                 <ListItemIcon>
                   <AccountBalanceWallet />
                 </ListItemIcon>
