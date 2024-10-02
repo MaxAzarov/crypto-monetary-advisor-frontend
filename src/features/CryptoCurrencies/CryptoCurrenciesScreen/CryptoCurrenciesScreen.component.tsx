@@ -10,6 +10,7 @@ import {
   Paper,
   Container,
   TablePagination,
+  TextField,
 } from "@mui/material";
 import { Line } from "react-chartjs-2";
 import {
@@ -20,7 +21,6 @@ import {
   CategoryScale,
 } from "chart.js";
 
-// Register necessary Chart.js components
 ChartJS.register(LineElement, PointElement, LinearScale, CategoryScale);
 
 interface CryptoData {
@@ -37,8 +37,9 @@ interface CryptoData {
 
 export const CryptoCurrenciesScreen: React.FC = () => {
   const [cryptos, setCryptos] = useState<CryptoData[]>([]);
+  const [searchQuery, setSearchQuery] = useState("");
   const [page, setPage] = useState(0);
-  const [rowsPerPage, setRowsPerPage] = useState(10); // Set initial rows per page to 10
+  const [rowsPerPage, setRowsPerPage] = useState(10);
 
   const fetchCryptos = async () => {
     try {
@@ -75,8 +76,24 @@ export const CryptoCurrenciesScreen: React.FC = () => {
     setPage(0);
   };
 
+  const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setSearchQuery(event.target.value.toLowerCase());
+    setPage(0);
+  };
+
+  const filteredCryptos = cryptos.filter((crypto) =>
+    crypto.name.toLowerCase().includes(searchQuery)
+  );
+
   return (
     <Container maxWidth="lg" style={{ marginTop: "20px" }}>
+      <TextField
+        label="Search Cryptocurrencies"
+        margin="normal"
+        value={searchQuery}
+        onChange={handleSearchChange}
+      />
+
       <TableContainer
         component={Paper}
         style={{
@@ -102,7 +119,7 @@ export const CryptoCurrenciesScreen: React.FC = () => {
             </TableRow>
           </TableHead>
           <TableBody>
-            {cryptos
+            {filteredCryptos
               .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
               .map((crypto) => (
                 <TableRow key={crypto.id}>
@@ -135,18 +152,10 @@ export const CryptoCurrenciesScreen: React.FC = () => {
                           responsive: true,
                           maintainAspectRatio: false,
                           scales: {
-                            x: {
-                              display: false,
-                            },
-                            y: {
-                              display: false,
-                            },
+                            x: { display: false },
+                            y: { display: false },
                           },
-                          plugins: {
-                            legend: {
-                              display: false,
-                            },
-                          },
+                          plugins: { legend: { display: false } },
                         }}
                       />
                     </div>
@@ -159,7 +168,7 @@ export const CryptoCurrenciesScreen: React.FC = () => {
       <TablePagination
         rowsPerPageOptions={[5, 10, 25]}
         component="div"
-        count={cryptos.length}
+        count={filteredCryptos.length}
         rowsPerPage={rowsPerPage}
         page={page}
         onPageChange={handleChangePage}

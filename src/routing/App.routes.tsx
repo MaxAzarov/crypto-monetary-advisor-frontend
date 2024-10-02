@@ -12,7 +12,6 @@ export function AppRoutes() {
         path={ROUTES.cryptocurrencies}
         element={<CryptoCurrenciesRoutes />}
       />
-      <Route path={ROUTES.exchanges} element={<div></div>} />
       <Route path={ROUTES.signup} element={<SignupRoutes />} />
       <Route path={ROUTES.login} element={<LoginRoutes />} />
       <Route path={ROUTES.portfolio} element={<PortfolioRoutes />} />

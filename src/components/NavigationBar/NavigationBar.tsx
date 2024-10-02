@@ -41,9 +41,9 @@ export const NavigationBar = () => {
               </NavigationItemStyled>
             </NavLink>
 
-            <NavLink to={ROUTES.exchanges} style={{ textDecoration: "none" }}>
+            <NavLink to={ROUTES.portfolio} style={{ textDecoration: "none" }}>
               <NavigationItemStyled variant="h6">
-                Exchanges
+                Portfolio
               </NavigationItemStyled>
             </NavLink>
           </Box>
