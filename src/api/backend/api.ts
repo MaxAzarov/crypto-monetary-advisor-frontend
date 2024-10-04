@@ -1,8 +1,8 @@
-import { createAxiosInstance, GetApiFunc } from "./base";
 import { createAuthApi } from "./auth/authApi";
-import { appStorage } from "../services/appStorage";
-import { Config } from "../config";
+import { appStorage } from "../../services/appStorage";
+import { Config } from "../../config";
 import { createWalletsApi } from "./wallets/walletsApi";
+import { createAxiosInstance, GetApiFunc } from "./base";
 
 function createApi(getAxiosInstance: GetApiFunc) {
   return {

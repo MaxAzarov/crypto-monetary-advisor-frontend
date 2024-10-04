@@ -1,6 +1,6 @@
 import { DeleteWalletRequest, DeleteWalletResponse } from "./apiTypes";
 import { mapRequest, mapResponse } from "./mappers";
-import { GetApiFunc } from "../../base";
+import { GetApiFunc } from "../../../base";
 import { deleteWalletApi } from "./deleteWallet.api";
 
 export const deleteWallet = async (

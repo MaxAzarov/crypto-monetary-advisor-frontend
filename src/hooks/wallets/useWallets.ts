@@ -1,11 +1,11 @@
 import { AxiosError } from "axios";
 import { useQuery, UseQueryOptions } from "react-query";
-import { Api } from "../../api/api";
 import { cacheKeys } from "./wallets.cacheKeys";
 import {
   GetWalletsRequest,
   GetWalletsResponse,
-} from "../../api/wallets/getWallets/apiTypes";
+} from "../../api/backend/wallets/getWallets/apiTypes";
+import { Api } from "../../api/backend/api";
 import { APIErrorResponse } from "../../api/commonTypes/api";
 
 export function useWallets(

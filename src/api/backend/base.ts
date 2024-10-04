@@ -1,5 +1,5 @@
 import axios, { AxiosInstance, HttpStatusCode } from "axios";
-import { ROUTES } from "../routing/routes";
+import { ROUTES } from "../../routing/routes";
 
 export interface ApiConfig {
   baseURL: string;

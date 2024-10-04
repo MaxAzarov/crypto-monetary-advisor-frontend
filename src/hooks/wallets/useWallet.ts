@@ -1,10 +1,10 @@
 import { AxiosError } from "axios";
 import { useQuery, UseQueryOptions } from "react-query";
-import { Api } from "../../api/api";
+import { Api } from "../../api/backend/api";
 import {
   GetWalletRequest,
   GetWalletResponse,
-} from "../../api/wallets/getWallet/apiTypes";
+} from "../../api/backend/wallets/getWallet/apiTypes";
 import { APIErrorResponse } from "../../api/commonTypes/api";
 import { cacheKeys } from "./wallets.cacheKeys";
 

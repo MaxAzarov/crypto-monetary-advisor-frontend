@@ -4,8 +4,8 @@ import { DialogStyled, Section } from "./ViewWallet.style";
 import { BackButton } from "../../../components/Buttons/BackButton";
 import { viewWalletModalStateAtom } from "./ViewWallet.state";
 import DeleteIcon from "@mui/icons-material/Delete";
-import { useWallet } from "../../../hooks/wallets/useWallet";
 import { useDeleteWallet } from "../../../hooks/wallets/useDeleteWallet";
+import { useWallet } from "../../../hooks/wallets/useWallet";
 
 export function ViewWalletModal() {
   const [modalState, setModalState] = useRecoilState(viewWalletModalStateAtom);

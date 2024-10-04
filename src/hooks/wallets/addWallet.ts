@@ -3,11 +3,11 @@ import { AxiosError } from "axios";
 import { useNotify } from "../../components/SnackbarAlert";
 import { APIErrorResponse } from "../../api/commonTypes/api";
 import { cacheKeys } from "./wallets.cacheKeys";
-import { Api } from "../../api/api";
+import { Api } from "../../api/backend/api";
 import {
   AddWalletRequest,
   AddWalletResponse,
-} from "../../api/wallets/addWallet/apiTypes";
+} from "../../api/backend/wallets/addWallet/apiTypes";
 
 export const useAddWallet = () => {
   const notify = useNotify();

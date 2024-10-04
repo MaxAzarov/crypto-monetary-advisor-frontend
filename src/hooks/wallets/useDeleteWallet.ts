@@ -1,12 +1,12 @@
 import { AxiosError } from "axios";
 import { useMutation, useQueryClient } from "react-query";
 import { useNotify } from "../../components/SnackbarAlert";
-import { Api } from "../../api/api";
+import { Api } from "../../api/backend/api";
 import { cacheKeys } from "./wallets.cacheKeys";
 import {
   DeleteWalletRequest,
   DeleteWalletResponse,
-} from "../../api/wallets/deleteWallet/apiTypes";
+} from "../../api/backend/wallets/deleteWallet/apiTypes";
 import { APIErrorResponse } from "../../api/commonTypes/api";
 
 export const useDeleteWallet = () => {

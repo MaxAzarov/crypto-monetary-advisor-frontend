@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-empty-object-type */
-import { AddWallet, Wallet } from "../../commonTypes/wallet";
+import { AddWallet, Wallet } from "../../../commonTypes/wallet";
 
 export interface AddWalletRequestApi extends AddWallet {}
 

@@ -7,7 +7,7 @@ import { LoginRequest, LoginResponse } from "../../api/auth/login/apiTypes";
 import { APIErrorResponse } from "../../api/commonTypes/api";
 import { appStorage } from "../../services/appStorage";
 import { ROUTES } from "../../routing/routes";
-import { Api } from "../../api/api";
+import { Api } from "../../api/backend/api";
 
 export const useLogin = () => {
   const notify = useNotify();

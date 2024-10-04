@@ -1,7 +1,7 @@
 import { mapRequest, mapResponse } from "./mappers";
 import { GetWalletsRequest, GetWalletsResponse } from "./apiTypes";
 import { getWalletsApi } from "./getWallets.api";
-import { GetApiFunc } from "../../base";
+import { GetApiFunc } from "../../../base";
 
 export const getWallets = async (
   getApi: GetApiFunc,

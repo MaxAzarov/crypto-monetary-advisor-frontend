@@ -1,5 +1,5 @@
 import { AddWalletRequest, AddWalletResponse } from "./apiTypes";
-import { GetApiFunc } from "../../base";
+import { GetApiFunc } from "../../../base";
 import { mapRequest, mapResponse } from "./mappers";
 import { addWalletApi } from "./addWallet.api";
 
