@@ -3,9 +3,10 @@ import {
   Typography,
   Box,
   Button,
-  Tabs,
-  Tab,
   Avatar,
+  IconButton,
+  Menu,
+  MenuItem,
   Table,
   TableBody,
   TableCell,
@@ -14,6 +15,7 @@ import {
   TableContainer,
   Paper,
 } from "@mui/material";
+import MoreVertIcon from "@mui/icons-material/MoreVert";
 import { formatAddress } from "../../../helpers/formatAddress";
 import { useAddWalletModal } from "../../../modals/wallets/AddWallet/AddWallet.hooks";
 import { useViewWalletModal } from "../../../modals/wallets/ViewWallet/ViewWallet.hooks";
@@ -21,18 +23,52 @@ import { Tokens, tokens } from "../../../constants/tokens";
 import { useWallets } from "../../../hooks/wallets/useWallets";
 import useContractPrices from "../../../hooks/prices/useContractPrices";
 import useUserBalances from "../../../hooks/balances/useUserBalances";
+import { useDeleteWallet } from "../../../hooks/wallets/useDeleteWallet";
 
 export function PortfolioScreen() {
   const { wallets } = useWallets({});
   const { openAddWalletModal, closeAddWalletModal } = useAddWalletModal();
   const { openWalletBillModal } = useViewWalletModal();
+  const { mutate: deleteWallet } = useDeleteWallet();
   const { balances } = useUserBalances();
   const { prices } = useContractPrices();
 
   const [selectedTab, setSelectedTab] = useState(0);
+  const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
+  const [selectedWalletId, setSelectedWalletId] = useState<number | null>(null);
 
-  const handleTabChange = (_: React.SyntheticEvent, newValue: number) => {
+  const handleTabChange = (newValue: number) => {
     setSelectedTab(newValue);
+  };
+
+  const handleMenuClick = (
+    event: React.MouseEvent<HTMLElement>,
+    walletId: number
+  ) => {
+    setAnchorEl(event.currentTarget);
+    setSelectedWalletId(walletId);
+  };
+
+  const handleMenuClose = () => {
+    setAnchorEl(null);
+  };
+
+  const handleViewDetails = () => {
+    const selectedWallet = wallets.find(
+      (wallet) => wallet.id === selectedWalletId
+    );
+
+    if (selectedWallet) {
+      openWalletBillModal({ id: selectedWallet.id });
+    }
+    handleMenuClose();
+  };
+
+  const handleRemoveWallet = async () => {
+    if (selectedWalletId) {
+      handleMenuClose();
+      await deleteWallet({ id: selectedWalletId });
+    }
   };
 
   return (
@@ -42,19 +78,44 @@ export function PortfolioScreen() {
           My portfolios {wallets.length > 0 ? <>({wallets.length})</> : <></>}
         </Typography>
 
-        <Tabs
-          value={selectedTab}
-          onChange={handleTabChange}
-          orientation="vertical"
-        >
-          {wallets.map((wallet) => (
-            <Tab
-              onClick={() => openWalletBillModal({ id: wallet.id })}
+        <Box>
+          {wallets.map((wallet, index) => (
+            <Box
               key={wallet.id}
-              label={formatAddress(wallet.accountAddress)}
-            />
+              display="flex"
+              alignItems="center"
+              justifyContent="space-between"
+              mb={2}
+              p={1}
+              style={{
+                backgroundColor:
+                  selectedTab === index ? "#e0e0e0" : "transparent",
+                borderRadius: "8px",
+                cursor: "pointer",
+              }}
+              onClick={() => handleTabChange(index)}
+            >
+              <Typography ml={2}>
+                {formatAddress(wallet.accountAddress)}
+              </Typography>
+              <IconButton
+                onClick={(event) => handleMenuClick(event, wallet.id)}
+                size="small"
+              >
+                <MoreVertIcon />
+              </IconButton>
+            </Box>
           ))}
-        </Tabs>
+        </Box>
+
+        <Menu
+          anchorEl={anchorEl}
+          open={Boolean(anchorEl)}
+          onClose={handleMenuClose}
+        >
+          <MenuItem onClick={handleViewDetails}>View Wallet Details</MenuItem>
+          <MenuItem onClick={handleRemoveWallet}>Remove Wallet</MenuItem>
+        </Menu>
 
         <Button
           variant="contained"

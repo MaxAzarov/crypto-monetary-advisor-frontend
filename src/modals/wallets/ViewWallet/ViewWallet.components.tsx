@@ -56,7 +56,7 @@ export function ViewWalletModal() {
         </Box>
         <Box>
           <Typography variant="h6">
-            Account address: {wallet.walletName}
+            Account address: {wallet.accountAddress}
           </Typography>
         </Box>
       </Section>
