@@ -19,7 +19,7 @@ import MoreVertIcon from "@mui/icons-material/MoreVert";
 import { formatAddress } from "../../../helpers/formatAddress";
 import { useAddWalletModal } from "../../../modals/wallets/AddWallet/AddWallet.hooks";
 import { useViewWalletModal } from "../../../modals/wallets/ViewWallet/ViewWallet.hooks";
-import { Tokens, tokens } from "../../../constants/tokens";
+import { Tokens, TOKENS } from "../../../constants/tokens";
 import { useWallets } from "../../../hooks/wallets/useWallets";
 import useContractPrices from "../../../hooks/prices/useContractPrices";
 import useUserBalances from "../../../hooks/balances/useUserBalances";
@@ -172,11 +172,11 @@ export function PortfolioScreen() {
                         <TableRow key={token}>
                           <TableCell>
                             <Avatar
-                              alt={tokens[token]?.name}
-                              src={tokens[token]?.icon}
+                              alt={TOKENS[token]?.name}
+                              src={TOKENS[token]?.icon}
                               style={{ marginRight: 8 }}
                             />
-                            {tokens[token]?.name || token}
+                            {TOKENS[token]?.name || token}
                           </TableCell>
                           <TableCell>{balance}</TableCell>
                           <TableCell>

@@ -1,11 +1,12 @@
 import { useEffect, useState } from "react";
 import { Api } from "../../api/coingecko/api";
-import { tokens, Tokens } from "../../constants/tokens";
+import { TOKENS, Tokens } from "../../constants/tokens";
 
 const defaultPricesData: Record<Tokens, number> = {
   USDT: 0,
   ETH: 0,
   DAI: 0,
+  WBTC: 0,
 };
 
 const useContractPrices = () => {
@@ -25,11 +26,11 @@ const useContractPrices = () => {
       pricesData.ETH = ethData.ethereum?.usd;
 
       await Promise.all(
-        Object.values(tokens).map(async (item) => {
+        Object.values(TOKENS).map(async (item) => {
           if (item.address) {
             const response = await Api.getPrice({ contractId: item.address });
 
-            pricesData[item.symbol] = response[item.address].usd;
+            pricesData[item.symbol] = response[item.address]?.usd;
           }
         })
       );

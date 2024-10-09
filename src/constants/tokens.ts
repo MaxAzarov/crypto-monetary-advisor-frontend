@@ -1,12 +1,13 @@
-export type Tokens = "ETH" | "USDT" | "DAI";
+export type Tokens = "ETH" | "USDT" | "DAI" | "WBTC";
 
 // ERC20 Token contract addresses, names, and icons for common cryptocurrencies
-export const tokens: {
+export const TOKENS: {
   [key: string]: {
     address: string;
     name: string;
     symbol: Tokens;
     icon: string;
+    pair?: string;
   };
 } = {
   ETH: {
@@ -14,6 +15,7 @@ export const tokens: {
     name: "Ethereum",
     symbol: "ETH",
     icon: "https://cryptologos.cc/logos/ethereum-eth-logo.png",
+    pair: "ETHUSDT",
   },
   USDT: {
     address: "0xdac17f958d2ee523a2206206994597c13d831ec7",
@@ -27,4 +29,15 @@ export const tokens: {
     symbol: "USDT",
     icon: "https://cryptologos.cc/logos/multi-collateral-dai-dai-logo.png",
   },
+  WBTC: {
+    address: "0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599",
+    name: "Wrapped Bitcoin",
+    symbol: "WBTC",
+    icon: "https://cryptologos.cc/logos/wrapped-bitcoin-wbtc-logo.png",
+  },
+};
+
+export const pairs: Record<string, string> = {
+  eth: "ETHUSDT",
+  wbtc: "WBTCUSDT",
 };

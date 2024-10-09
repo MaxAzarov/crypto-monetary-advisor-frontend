@@ -18,6 +18,9 @@ import useInformer from "../../../hooks/useInformer";
 import makeStyles from "../../../styles/makeStyles";
 import Card from "../../../components/Card/Card";
 import { Chart } from "../../../components/Chart";
+import { socket } from "../../../sockets";
+import { useParams } from "react-router-dom";
+import { pairs } from "../../../constants/tokens";
 
 const CARD_LABEL = "KUCOIN ticker:ETH-USDT HIGH candle 1M";
 
@@ -65,6 +68,7 @@ const getPrediction = async (net: INet): Promise<[number, number]> => {
 
 export const CryptoCurrencyTradingViewScreen = () => {
   const { classes } = useStyles();
+  const params = useParams();
 
   const [net, setNet] = useState<INet | null>();
 
@@ -90,7 +94,6 @@ export const CryptoCurrencyTradingViewScreen = () => {
       netEmitter.once(({ net, status }) => {
         if (status.error > CC_MAX_TRAIN_ERROR) {
           predictEmitter.next("untrained");
-          // history.push("/untrained-page");
           return;
         }
 
@@ -134,14 +137,21 @@ export const CryptoCurrencyTradingViewScreen = () => {
     []
   );
 
+  useEffect(() => {
+    if (params.symbol) {
+      const pair = pairs[params.symbol];
+
+      if (pair) {
+        socket.emit("subscribeToCandle", { pair });
+      }
+    }
+  }, [params.symbol]);
+
   const handleAction = (action: string) => {
     if (action === "export-net") {
       const func = NeuralNetwork.prototype.toFunction;
       const code = func.apply(net).toString();
       downloadFile(code, `hypebot-net-${new Date().toISOString()}.json`);
-    }
-    if (action === "history-back") {
-      // history.push("/setup-page");
     }
   };
 

@@ -1,7 +1,10 @@
 import { ethers } from "ethers";
+import { Config } from "../config";
 
 class TokenContract {
-  private readonly provider = new ethers.BrowserProvider(window.ethereum);
+  private readonly provider = new ethers.JsonRpcProvider(
+    `https://mainnet.infura.io/v3/${Config.INFURA_PROJECT_ID}`
+  );
 
   private readonly contract: ethers.Contract;
 

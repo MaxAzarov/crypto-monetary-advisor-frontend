@@ -2,7 +2,7 @@ import { useCallback, useEffect, useState } from "react";
 import { useWallets } from "../wallets/useWallets";
 
 import { ethers } from "ethers";
-import { tokens, Tokens } from "../../constants/tokens";
+import { TOKENS, Tokens } from "../../constants/tokens";
 import TokenContract from "../../contracts/tokenContract";
 
 const useUserBalances = () => {
@@ -37,7 +37,7 @@ const useUserBalances = () => {
       }
 
       // Fetch ERC20 token balances
-      for (const [token, { address }] of Object.entries(tokens)) {
+      for (const [token, { address }] of Object.entries(TOKENS)) {
         try {
           if (address) {
             const contract = new TokenContract(address);

@@ -245,7 +245,6 @@ export const SetupScreen = () => {
         `hypebot-${new Date().toISOString()}.json`
       );
     }
-    // history.push("/main-page");
   };
 
   const handleAction = (action: string) => {

@@ -17,7 +17,6 @@ import {
 } from "lightweight-charts";
 import { getTimeLabel } from "../../helpers/getTimeLabel";
 import { priceEmitter } from "../../sockets";
-import { CC_LIVENESS_DELAY } from "../../constants/params";
 import { trendEmitter } from "../../libs/source/trendEmitter";
 
 interface IChartProps {
@@ -102,16 +101,10 @@ export const Chart = ({ predictEmitter, height, width }: IChartProps) => {
 
     let lastPrice: number = 0;
 
-    const disconnectPriceEmitter = priceEmitter
-      .operator(
-        Operator.liveness(() => {
-          // history.push("/error-page");
-        }, CC_LIVENESS_DELAY)
-      )
-      .connect((value) => {
-        lastPrice = value;
-        priceSeries.update({ value, time: Date.now() as UTCTimestamp });
-      });
+    const disconnectPriceEmitter = priceEmitter.connect((value) => {
+      lastPrice = value;
+      priceSeries.update({ value, time: Date.now() as UTCTimestamp });
+    });
 
     const line = priceSeries.createPriceLine({
       price: lastPrice,

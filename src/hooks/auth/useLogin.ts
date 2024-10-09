@@ -3,7 +3,10 @@ import { AxiosError } from "axios";
 
 import { useNavigate } from "react-router-dom";
 import { useNotify } from "../../components/SnackbarAlert";
-import { LoginRequest, LoginResponse } from "../../api/auth/login/apiTypes";
+import {
+  LoginRequest,
+  LoginResponse,
+} from "../../api/backend/auth/login/apiTypes";
 import { APIErrorResponse } from "../../api/commonTypes/api";
 import { appStorage } from "../../services/appStorage";
 import { ROUTES } from "../../routing/routes";
@@ -25,7 +28,7 @@ export const useLogin = () => {
       onSuccess: async ({ jwtToken }) => {
         await appStorage.setApiToken(jwtToken);
 
-        navigate(ROUTES.main);
+        navigate(ROUTES.portfolio);
       },
       onError: () => {
         notify("error", "Invalid credentials");
