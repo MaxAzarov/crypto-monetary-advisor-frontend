@@ -1,1 +1,1 @@
-export * from "./GeneralLayout.component";
+export { GeneralLayout } from "./GeneralLayout.component";
