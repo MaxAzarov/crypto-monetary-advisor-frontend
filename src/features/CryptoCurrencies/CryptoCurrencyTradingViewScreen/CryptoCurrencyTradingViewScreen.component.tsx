@@ -1,15 +1,14 @@
 /* eslint-disable @typescript-eslint/no-empty-object-type */
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { useEffect, useState, useRef } from "react";
+import { useEffect, useRef } from "react";
 
-import { AutoSizer, sleep, Breadcrumbs } from "react-declarative";
+import { AutoSizer, sleep } from "react-declarative";
 
 import { NeuralNetwork } from "brain.js";
 
 import Box from "@mui/material/Box";
 
 import { getTimeLabel } from "../../../helpers/getTimeLabel";
-import downloadFile from "../../../helpers/downloadFile";
 import { CC_MAX_TRAIN_ERROR, CC_NET_TICK } from "../../../constants/params";
 import netInputEmitter from "../../../libs/source/netInputEmitter";
 import netEmitter from "../../../libs/source/netEmitter";
@@ -22,20 +21,19 @@ import { useParams } from "react-router-dom";
 import { pairs } from "../../../constants/tokens";
 import { Card } from "../../../components/Card";
 
-const CARD_LABEL = "KUCOIN ticker:ETH-USDT HIGH candle 1M";
-
 const useStyles = makeStyles()(() => ({
   root: {
     width: "100%",
-    minHeight: "100vh",
     display: "flex",
-    alignItems: "stretch",
-    justifyContent: "stretch",
-    flexDirection: "column",
+    padding: "10px",
+    alignItems: "center",
+    justifyContent: "center",
   },
   container: {
     height: "calc(100vh - 80px)",
     width: "100%",
+    alignItems: "center",
+    justifyContent: "center",
   },
   adjust: {
     flex: 1,
@@ -43,18 +41,6 @@ const useStyles = makeStyles()(() => ({
 }));
 
 interface INet extends NeuralNetwork<any, any> {}
-
-const options = [
-  {
-    action: "history-back",
-    label: "Go back to net edit",
-  },
-  {
-    action: "export-net",
-    isDisabled: (net: INet | null) => !net,
-    label: "Export to JS",
-  },
-];
 
 const getPrediction = async (net: INet): Promise<[number, number]> => {
   console.log(`net predict input begin ${getTimeLabel(new Date())}`);
@@ -69,8 +55,6 @@ const getPrediction = async (net: INet): Promise<[number, number]> => {
 export const CryptoCurrencyTradingViewScreen = () => {
   const { classes } = useStyles();
   const params = useParams();
-
-  const [net, setNet] = useState<INet | null>();
 
   const isMounted = useRef(false);
 
@@ -124,7 +108,6 @@ export const CryptoCurrencyTradingViewScreen = () => {
 
         process();
         predictEmitter.next(null);
-        setNet(net as unknown as INet);
       }),
     []
   );
@@ -147,23 +130,14 @@ export const CryptoCurrencyTradingViewScreen = () => {
     }
   }, [params.symbol]);
 
-  const handleAction = (action: string) => {
-    if (action === "export-net") {
-      const func = NeuralNetwork.prototype.toFunction;
-      const code = func.apply(net).toString();
-      downloadFile(code, `hypebot-net-${new Date().toISOString()}.json`);
-    }
-  };
+  const pair = params?.symbol?.toLowerCase()
+    ? pairs[params?.symbol?.toLowerCase()]
+    : "";
+
+  const CARD_LABEL = `BINANCE ticker:${pair} HIGH candle 1M`;
 
   return (
     <Box className={classes.root}>
-      <Breadcrumbs
-        title="HypeNet"
-        subtitle="TradePage"
-        actions={options}
-        payload={net}
-        onAction={handleAction}
-      />
       <Box className={classes.container}>
         <Card label={CARD_LABEL}>
           <AutoSizer>
