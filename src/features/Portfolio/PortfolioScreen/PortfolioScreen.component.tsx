@@ -24,6 +24,8 @@ import { useWallets } from "../../../hooks/wallets/useWallets";
 import useContractPrices from "../../../hooks/prices/useContractPrices";
 import useUserBalances from "../../../hooks/balances/useUserBalances";
 import { useDeleteWallet } from "../../../hooks/wallets/useDeleteWallet";
+import { useNavigate } from "react-router-dom";
+import { ROUTES } from "../../../routing/routes";
 
 export function PortfolioScreen() {
   const { wallets } = useWallets({});
@@ -32,6 +34,7 @@ export function PortfolioScreen() {
   const { mutate: deleteWallet } = useDeleteWallet();
   const { balances } = useUserBalances();
   const { prices } = useContractPrices();
+  const navigate = useNavigate();
 
   const [selectedTab, setSelectedTab] = useState(0);
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
@@ -169,7 +172,17 @@ export function PortfolioScreen() {
                       Object.entries(
                         balances[wallets[selectedTab].accountAddress]
                       ).map(([token, balance]) => (
-                        <TableRow key={token}>
+                        <TableRow
+                          key={token}
+                          onClick={() => {
+                            navigate(
+                              ROUTES.cryptocurrencyDetails.replace(
+                                ":symbol",
+                                token
+                              )
+                            );
+                          }}
+                        >
                           <TableCell>
                             <Avatar
                               alt={TOKENS[token]?.name}

@@ -139,7 +139,7 @@ export const CryptoCurrencyTradingViewScreen = () => {
 
   useEffect(() => {
     if (params.symbol) {
-      const pair = pairs[params.symbol];
+      const pair = pairs[params.symbol.toLowerCase()];
 
       if (pair) {
         socket.emit("subscribeToCandle", { pair });
