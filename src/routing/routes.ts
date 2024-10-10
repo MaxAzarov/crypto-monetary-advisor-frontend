@@ -1,5 +1,5 @@
 export const ROUTES = {
-  main: "/",
+  dashboard: "/",
   profile: "/profile",
   cryptocurrencies: "/cryptocurrencies",
   portfolio: "/portfolio",

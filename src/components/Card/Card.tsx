@@ -57,5 +57,3 @@ export const Card = ({
     </Paper>
   );
 };
-
-export default Card;

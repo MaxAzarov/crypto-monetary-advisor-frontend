@@ -16,11 +16,11 @@ import netEmitter from "../../../libs/source/netEmitter";
 import { predictEmitter } from "../../../emitters/predictEmitter";
 import useInformer from "../../../hooks/useInformer";
 import makeStyles from "../../../styles/makeStyles";
-import Card from "../../../components/Card/Card";
 import { Chart } from "../../../components/Chart";
 import { socket } from "../../../sockets";
 import { useParams } from "react-router-dom";
 import { pairs } from "../../../constants/tokens";
+import { Card } from "../../../components/Card";
 
 const CARD_LABEL = "KUCOIN ticker:ETH-USDT HIGH candle 1M";
 

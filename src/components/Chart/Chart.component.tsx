@@ -1,4 +1,3 @@
-// CryptoCurrencyTradingViewScreen
 import { useRef, useLayoutEffect } from "react";
 
 import {

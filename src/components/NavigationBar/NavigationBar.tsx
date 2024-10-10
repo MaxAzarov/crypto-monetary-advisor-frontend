@@ -24,13 +24,18 @@ export const NavigationBar = () => {
               alignItems: "center",
             }}
           >
-            <Typography
-              variant="h4"
-              component="p"
-              sx={{ padding: "10px 20px" }}
+            <NavLink
+              to={ROUTES.dashboard}
+              style={{ textDecoration: "none", color: "white" }}
             >
-              CryptoAdvisor
-            </Typography>
+              <Typography
+                variant="h4"
+                component="p"
+                sx={{ padding: "10px 20px" }}
+              >
+                CryptoAdvisor
+              </Typography>
+            </NavLink>
 
             <NavLink
               to={ROUTES.cryptocurrencies}
