@@ -1,12 +1,5 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
-export interface MonobankWallet {
-  monobankKey?: string;
-  monobankName?: string;
-}
-
 export type AppStorageSchema = {
   apiToken?: string;
-  wallets: MonobankWallet[];
 };
 
 class AppStorage {
@@ -45,29 +38,6 @@ class AppStorage {
 
   async clearUserData() {
     await this.removeApiToken();
-    await this.clearWallets();
-  }
-
-  async getWallets(): Promise<MonobankWallet[]> {
-    return JSON.parse((this.get("wallets") as any) || []) || [];
-  }
-
-  async addWallet(wallet: MonobankWallet): Promise<void> {
-    const wallets = await this.getWallets();
-    wallets.push(wallet);
-    await this.set("wallets", wallets);
-  }
-
-  async removeWallet(walletToRemove: MonobankWallet): Promise<void> {
-    const wallets = await this.getWallets();
-    const updatedWallets = wallets.filter(
-      (wallet) => wallet.monobankKey !== walletToRemove.monobankKey
-    );
-    await this.set("wallets", updatedWallets);
-  }
-
-  async clearWallets(): Promise<void> {
-    await this.remove("wallets");
   }
 }
 

@@ -17,7 +17,7 @@ import { addWalletFormSchema } from "./AddWallet.schema";
 import { BackButton } from "../../../components/Buttons/BackButton";
 import { AddWalletBaseForm } from "../WalletBaseForm/WalletBaseForm.component";
 import { useAddWallet } from "../../../hooks/wallets/addWallet";
-import { appStorage } from "../../../services/appStorage";
+import { useAddMonobankClient } from "../../../hooks/monobankClient/addMonobankClient";
 
 const defaultWallet: AddWalletForm = {
   accountAddress: "",
@@ -30,6 +30,7 @@ const defaultWallet: AddWalletForm = {
 export function AddWalletModal() {
   const [modalState, setModalState] = useRecoilState(addWalletModalStateAtom);
   const { mutate: addWallet } = useAddWallet();
+  const { mutate: addMonobankClient } = useAddMonobankClient();
 
   const form = useFormik<AddWalletForm>({
     initialValues: { ...defaultWallet, ...modalState.initialFields },
@@ -43,7 +44,7 @@ export function AddWalletModal() {
           walletName: values.walletName,
         });
       } else if (values.type === "monobank") {
-        await appStorage.addWallet({
+        await addMonobankClient({
           monobankKey: values.monobankKey,
           monobankName: values.monobankName,
         });

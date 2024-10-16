@@ -3,11 +3,13 @@ import { appStorage } from "../../services/appStorage";
 import { Config } from "../../config";
 import { createWalletsApi } from "./wallets/walletsApi";
 import { createAxiosInstance, GetApiFunc } from "./base";
+import { createMonobankApi } from "./monobankClients/monobankClientsApi";
 
 function createApi(getAxiosInstance: GetApiFunc) {
   return {
     ...createAuthApi(getAxiosInstance),
     ...createWalletsApi(getAxiosInstance),
+    ...createMonobankApi(getAxiosInstance),
   };
 }
 

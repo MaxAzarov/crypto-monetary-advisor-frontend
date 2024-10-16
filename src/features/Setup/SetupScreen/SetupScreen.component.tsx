@@ -261,7 +261,6 @@ export const SetupScreen = () => {
   };
 
   const handleChange = (data: IData, initial: boolean) => {
-    console.log("🚀 ~ handleChange ~ data:", data);
     if (!initial) {
       setChanged(true);
     }

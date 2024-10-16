@@ -3,42 +3,25 @@ import {
   Typography,
   Box,
   Button,
-  Avatar,
   IconButton,
   Menu,
   MenuItem,
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableRow,
-  TableContainer,
-  Paper,
 } from "@mui/material";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
 import { formatAddress } from "../../../helpers/formatAddress";
 import { useAddWalletModal } from "../../../modals/wallets/AddWallet/AddWallet.hooks";
 import { useViewWalletModal } from "../../../modals/wallets/ViewWallet/ViewWallet.hooks";
-import { Tokens, TOKENS } from "../../../constants/tokens";
 import {
   PortfolioItem,
   usePortfolio,
-} from "../../../hooks/portfolio/usePortfolio"; // Adjust the import path accordingly
-import useContractPrices from "../../../hooks/prices/useContractPrices";
-import useUserBalances from "../../../hooks/balances/useUserBalances";
-import { useDeleteWallet } from "../../../hooks/wallets/useDeleteWallet";
-import { useNavigate } from "react-router-dom";
-import { ROUTES } from "../../../routing/routes";
+} from "../../../hooks/portfolio/usePortfolio";
+import { WalletTable } from "../../../components/WalletTable";
+import { MonobankTable } from "../../../components/MonobankTable";
 
 export function PortfolioScreen() {
   const portfolio = usePortfolio();
-  console.log("🚀 ~ PortfolioScreen ~ portfolio:", portfolio);
   const { openAddWalletModal, closeAddWalletModal } = useAddWalletModal();
   const { openWalletBillModal } = useViewWalletModal();
-  const { mutate: deleteWallet } = useDeleteWallet();
-  const { balances } = useUserBalances();
-  const { prices } = useContractPrices();
-  const navigate = useNavigate();
 
   const [selectedTab, setSelectedTab] = useState(0);
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
@@ -75,10 +58,12 @@ export function PortfolioScreen() {
     handleMenuClose();
   };
 
-  const handleRemoveWallet = async () => {
-    if (selectedPortfolioItem && selectedPortfolioItem.type === "wallet") {
-      handleMenuClose();
-      await deleteWallet({ id: selectedPortfolioItem.id });
+  const renderComponent = () => {
+    switch (selectedPortfolioItem?.type) {
+      case "monobank":
+        return <MonobankTable portfolioItem={selectedPortfolioItem} />;
+      case "wallet":
+        return <WalletTable portfolioItem={selectedPortfolioItem} />;
     }
   };
 
@@ -128,7 +113,6 @@ export function PortfolioScreen() {
           onClose={handleMenuClose}
         >
           <MenuItem onClick={handleViewDetails}>View Wallet Details</MenuItem>
-          <MenuItem onClick={handleRemoveWallet}>Remove Wallet</MenuItem>
         </Menu>
 
         <Button
@@ -166,66 +150,8 @@ export function PortfolioScreen() {
                 ? `Account address: ${selectedPortfolioItem.accountAddress}`
                 : `Monobank Account: ${selectedPortfolioItem.monobankName}`}
             </Typography>
-            {selectedPortfolioItem.type === "wallet" && (
-              <Box mt={2} width="100%">
-                <TableContainer
-                  component={Paper}
-                  style={{ boxShadow: "none", backgroundColor: "transparent" }}
-                >
-                  <Table>
-                    <TableHead>
-                      <TableRow>
-                        <TableCell>Token</TableCell>
-                        <TableCell>Amount</TableCell>
-                        <TableCell>Price (USD)</TableCell>
-                        <TableCell>Value (USD)</TableCell>
-                      </TableRow>
-                    </TableHead>
-                    <TableBody>
-                      {balances?.[selectedPortfolioItem.accountAddress] &&
-                        Object.entries(
-                          balances[selectedPortfolioItem.accountAddress]
-                        ).map(([token, balance]) => (
-                          <TableRow
-                            key={token}
-                            onClick={() => {
-                              navigate(
-                                ROUTES.cryptocurrencyDetails.replace(
-                                  ":symbol",
-                                  token
-                                )
-                              );
-                            }}
-                          >
-                            <TableCell>
-                              <Avatar
-                                alt={TOKENS[token]?.name}
-                                src={TOKENS[token]?.icon}
-                                style={{ marginRight: 8 }}
-                              />
-                              {TOKENS[token]?.name || token}
-                            </TableCell>
-                            <TableCell>{balance}</TableCell>
-                            <TableCell>
-                              {prices[token as Tokens]
-                                ? `$${prices[token as Tokens]}`
-                                : "N/A"}
-                            </TableCell>
-                            <TableCell>
-                              {prices[token as Tokens]
-                                ? `$${(
-                                    parseFloat(balance) *
-                                    prices[token as Tokens]
-                                  ).toFixed(2)}`
-                                : "N/A"}
-                            </TableCell>
-                          </TableRow>
-                        ))}
-                    </TableBody>
-                  </Table>
-                </TableContainer>
-              </Box>
-            )}
+
+            {renderComponent()}
           </>
         )}
       </Box>

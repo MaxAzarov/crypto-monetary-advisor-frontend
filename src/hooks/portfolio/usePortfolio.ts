@@ -1,17 +1,17 @@
 import { useEffect, useState } from "react";
 import { Wallet } from "../../api/commonTypes/wallet";
-import { MonobankWallet } from "../../services/appStorage";
 import { useWallets } from "../wallets/useWallets";
-import { useMonobankAccounts } from "../wallets/useMonobankAccounts";
+import { useMonobankClients } from "../monobankClient/useMonobankClients";
+import { MonobankClient } from "../../api/commonTypes/monobankClient";
 
-export type PortfolioItem =
-  | ({
-      type: "wallet";
-    } & Wallet)
-  | ({ type: "monobank" } & MonobankWallet);
+export type CryptoWallet = { type: "wallet" } & Wallet;
+
+export type Monobank = { type: "monobank" } & MonobankClient;
+
+export type PortfolioItem = CryptoWallet | Monobank;
 
 export const usePortfolio = () => {
-  const { accounts: monobankAccounts } = useMonobankAccounts();
+  const { accounts: monobankAccounts } = useMonobankClients({});
   const { wallets } = useWallets({});
   const [portfolio, setPortfolio] = useState<PortfolioItem[]>([]);
 
