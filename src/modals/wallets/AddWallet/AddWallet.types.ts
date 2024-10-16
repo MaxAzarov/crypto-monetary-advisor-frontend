@@ -1,6 +1,9 @@
 export interface AddWalletForm {
   accountAddress: string;
   walletName: string;
+  type: "wallet" | "monobank";
+  monobankKey: string;
+  monobankName: string;
 }
 
 type AddWalletModalStateBase = {

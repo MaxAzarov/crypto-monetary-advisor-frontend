@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Typography,
   Box,
@@ -20,7 +20,10 @@ import { formatAddress } from "../../../helpers/formatAddress";
 import { useAddWalletModal } from "../../../modals/wallets/AddWallet/AddWallet.hooks";
 import { useViewWalletModal } from "../../../modals/wallets/ViewWallet/ViewWallet.hooks";
 import { Tokens, TOKENS } from "../../../constants/tokens";
-import { useWallets } from "../../../hooks/wallets/useWallets";
+import {
+  PortfolioItem,
+  usePortfolio,
+} from "../../../hooks/portfolio/usePortfolio"; // Adjust the import path accordingly
 import useContractPrices from "../../../hooks/prices/useContractPrices";
 import useUserBalances from "../../../hooks/balances/useUserBalances";
 import { useDeleteWallet } from "../../../hooks/wallets/useDeleteWallet";
@@ -28,7 +31,8 @@ import { useNavigate } from "react-router-dom";
 import { ROUTES } from "../../../routing/routes";
 
 export function PortfolioScreen() {
-  const { wallets } = useWallets({});
+  const portfolio = usePortfolio();
+  console.log("🚀 ~ PortfolioScreen ~ portfolio:", portfolio);
   const { openAddWalletModal, closeAddWalletModal } = useAddWalletModal();
   const { openWalletBillModal } = useViewWalletModal();
   const { mutate: deleteWallet } = useDeleteWallet();
@@ -38,39 +42,43 @@ export function PortfolioScreen() {
 
   const [selectedTab, setSelectedTab] = useState(0);
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
-  const [selectedWalletId, setSelectedWalletId] = useState<number | null>(null);
+  const [selectedPortfolioItem, setSelectedPortfolioItem] =
+    useState<PortfolioItem | null>(null);
 
   const handleTabChange = (newValue: number) => {
     setSelectedTab(newValue);
+    setSelectedPortfolioItem(portfolio[newValue]);
   };
 
   const handleMenuClick = (
     event: React.MouseEvent<HTMLElement>,
-    walletId: number
+    portfolioItem: PortfolioItem
   ) => {
     setAnchorEl(event.currentTarget);
-    setSelectedWalletId(walletId);
+    setSelectedPortfolioItem(portfolioItem);
   };
 
   const handleMenuClose = () => {
     setAnchorEl(null);
   };
 
-  const handleViewDetails = () => {
-    const selectedWallet = wallets.find(
-      (wallet) => wallet.id === selectedWalletId
-    );
+  useEffect(() => {
+    if (portfolio.length > 0) {
+      setSelectedPortfolioItem(portfolio[0]);
+    }
+  }, [portfolio]);
 
-    if (selectedWallet) {
-      openWalletBillModal({ id: selectedWallet.id });
+  const handleViewDetails = () => {
+    if (selectedPortfolioItem && selectedPortfolioItem.type === "wallet") {
+      openWalletBillModal({ id: selectedPortfolioItem.id });
     }
     handleMenuClose();
   };
 
   const handleRemoveWallet = async () => {
-    if (selectedWalletId) {
+    if (selectedPortfolioItem && selectedPortfolioItem.type === "wallet") {
       handleMenuClose();
-      await deleteWallet({ id: selectedWalletId });
+      await deleteWallet({ id: selectedPortfolioItem.id });
     }
   };
 
@@ -78,13 +86,14 @@ export function PortfolioScreen() {
     <Box style={{ display: "flex", padding: "10px", height: "100%" }}>
       <Box style={{ flexBasis: "30%" }}>
         <Typography variant="h6" mt={2}>
-          My portfolios {wallets.length > 0 ? <>({wallets.length})</> : <></>}
+          My portfolios{" "}
+          {portfolio.length > 0 ? <>({portfolio.length})</> : <></>}
         </Typography>
 
         <Box>
-          {wallets.map((wallet, index) => (
+          {portfolio.map((item, index) => (
             <Box
-              key={wallet.id}
+              key={index}
               display="flex"
               alignItems="center"
               justifyContent="space-between"
@@ -99,10 +108,12 @@ export function PortfolioScreen() {
               onClick={() => handleTabChange(index)}
             >
               <Typography ml={2}>
-                {formatAddress(wallet.accountAddress)}
+                {item.type === "wallet"
+                  ? formatAddress(item.accountAddress)
+                  : item.monobankName}
               </Typography>
               <IconButton
-                onClick={(event) => handleMenuClick(event, wallet.id)}
+                onClick={(event) => handleMenuClick(event, item)}
                 size="small"
               >
                 <MoreVertIcon />
@@ -148,68 +159,73 @@ export function PortfolioScreen() {
           marginLeft: "20px",
         }}
       >
-        {wallets.length > 0 && (
+        {portfolio.length > 0 && selectedPortfolioItem && (
           <>
             <Typography variant="h5" mt={2}>
-              Account address: {wallets[selectedTab].accountAddress}
+              {selectedPortfolioItem.type === "wallet"
+                ? `Account address: ${selectedPortfolioItem.accountAddress}`
+                : `Monobank Account: ${selectedPortfolioItem.monobankName}`}
             </Typography>
-            <Box mt={2} width="100%">
-              <TableContainer
-                component={Paper}
-                style={{ boxShadow: "none", backgroundColor: "transparent" }}
-              >
-                <Table>
-                  <TableHead>
-                    <TableRow>
-                      <TableCell>Token</TableCell>
-                      <TableCell>Amount</TableCell>
-                      <TableCell>Price (USD)</TableCell>
-                      <TableCell>Value (USD)</TableCell>
-                    </TableRow>
-                  </TableHead>
-                  <TableBody>
-                    {balances?.[wallets[selectedTab].accountAddress] &&
-                      Object.entries(
-                        balances[wallets[selectedTab].accountAddress]
-                      ).map(([token, balance]) => (
-                        <TableRow
-                          key={token}
-                          onClick={() => {
-                            navigate(
-                              ROUTES.cryptocurrencyDetails.replace(
-                                ":symbol",
-                                token
-                              )
-                            );
-                          }}
-                        >
-                          <TableCell>
-                            <Avatar
-                              alt={TOKENS[token]?.name}
-                              src={TOKENS[token]?.icon}
-                              style={{ marginRight: 8 }}
-                            />
-                            {TOKENS[token]?.name || token}
-                          </TableCell>
-                          <TableCell>{balance}</TableCell>
-                          <TableCell>
-                            {prices[token as Tokens]
-                              ? `$${prices[token as Tokens]}`
-                              : "N/A"}
-                          </TableCell>
-                          <TableCell>
-                            {prices[token as Tokens]
-                              ? `$${(
-                                  parseFloat(balance) * prices[token as Tokens]
-                                ).toFixed(2)}`
-                              : "N/A"}
-                          </TableCell>
-                        </TableRow>
-                      ))}
-                  </TableBody>
-                </Table>
-              </TableContainer>
-            </Box>
+            {selectedPortfolioItem.type === "wallet" && (
+              <Box mt={2} width="100%">
+                <TableContainer
+                  component={Paper}
+                  style={{ boxShadow: "none", backgroundColor: "transparent" }}
+                >
+                  <Table>
+                    <TableHead>
+                      <TableRow>
+                        <TableCell>Token</TableCell>
+                        <TableCell>Amount</TableCell>
+                        <TableCell>Price (USD)</TableCell>
+                        <TableCell>Value (USD)</TableCell>
+                      </TableRow>
+                    </TableHead>
+                    <TableBody>
+                      {balances?.[selectedPortfolioItem.accountAddress] &&
+                        Object.entries(
+                          balances[selectedPortfolioItem.accountAddress]
+                        ).map(([token, balance]) => (
+                          <TableRow
+                            key={token}
+                            onClick={() => {
+                              navigate(
+                                ROUTES.cryptocurrencyDetails.replace(
+                                  ":symbol",
+                                  token
+                                )
+                              );
+                            }}
+                          >
+                            <TableCell>
+                              <Avatar
+                                alt={TOKENS[token]?.name}
+                                src={TOKENS[token]?.icon}
+                                style={{ marginRight: 8 }}
+                              />
+                              {TOKENS[token]?.name || token}
+                            </TableCell>
+                            <TableCell>{balance}</TableCell>
+                            <TableCell>
+                              {prices[token as Tokens]
+                                ? `$${prices[token as Tokens]}`
+                                : "N/A"}
+                            </TableCell>
+                            <TableCell>
+                              {prices[token as Tokens]
+                                ? `$${(
+                                    parseFloat(balance) *
+                                    prices[token as Tokens]
+                                  ).toFixed(2)}`
+                                : "N/A"}
+                            </TableCell>
+                          </TableRow>
+                        ))}
+                    </TableBody>
+                  </Table>
+                </TableContainer>
+              </Box>
+            )}
           </>
         )}
       </Box>

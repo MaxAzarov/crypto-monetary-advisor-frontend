@@ -1,6 +1,13 @@
 import { FormikProvider, useFormik } from "formik";
 import { useRecoilState } from "recoil";
-import { Button, Divider, Typography } from "@mui/material";
+import {
+  Button,
+  Divider,
+  Typography,
+  MenuItem,
+  Select,
+  TextField,
+} from "@mui/material";
 
 import { DialogStyled, Section } from "./AddWallet.style";
 import { addWalletModalStateAtom } from "./AddWallet.state";
@@ -10,10 +17,14 @@ import { addWalletFormSchema } from "./AddWallet.schema";
 import { BackButton } from "../../../components/Buttons/BackButton";
 import { AddWalletBaseForm } from "../WalletBaseForm/WalletBaseForm.component";
 import { useAddWallet } from "../../../hooks/wallets/addWallet";
+import { appStorage } from "../../../services/appStorage";
 
 const defaultWallet: AddWalletForm = {
   accountAddress: "",
   walletName: "",
+  type: "wallet",
+  monobankKey: "",
+  monobankName: "",
 };
 
 export function AddWalletModal() {
@@ -26,7 +37,18 @@ export function AddWalletModal() {
     validationSchema: addWalletFormSchema,
     validateOnChange: false,
     async onSubmit(values) {
-      await addWallet(values);
+      if (values.type === "wallet") {
+        await addWallet({
+          accountAddress: values.accountAddress,
+          walletName: values.walletName,
+        });
+      } else if (values.type === "monobank") {
+        await appStorage.addWallet({
+          monobankKey: values.monobankKey,
+          monobankName: values.monobankName,
+        });
+      }
+
       modalState.onSuccess?.();
       form.resetForm();
     },
@@ -45,11 +67,44 @@ export function AddWalletModal() {
       <form onSubmit={form.handleSubmit}>
         <Section sx={{ pb: 0 }}>
           <BackButton onClick={handleClose} />
-          <Typography variant="h6">Add wallet</Typography>
+          <Typography variant="h6">Add Wallet or Monobank Account</Typography>
         </Section>
 
         <FormikProvider value={form}>
-          <AddWalletBaseForm />
+          <Section>
+            <Typography variant="body1">Choose Account Type</Typography>
+            <Select
+              name="type"
+              value={form.values.type}
+              onChange={form.handleChange}
+              fullWidth
+            >
+              <MenuItem value="wallet">Wallet</MenuItem>
+              <MenuItem value="monobank">Monobank</MenuItem>
+            </Select>
+          </Section>
+
+          {form.values.type === "wallet" ? (
+            <AddWalletBaseForm />
+          ) : (
+            <Section>
+              <TextField
+                label="Monobank Key"
+                name="monobankKey"
+                value={form.values.monobankKey}
+                onChange={form.handleChange}
+                fullWidth
+              />
+              <TextField
+                label="Monobank Name"
+                name="monobankName"
+                value={form.values.monobankName}
+                onChange={form.handleChange}
+                fullWidth
+                sx={{ mt: 2 }}
+              />
+            </Section>
+          )}
         </FormikProvider>
 
         <Divider />
