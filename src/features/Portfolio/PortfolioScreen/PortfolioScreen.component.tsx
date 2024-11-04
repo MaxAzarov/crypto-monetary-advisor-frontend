@@ -17,6 +17,7 @@ import {
 } from "../../../hooks/portfolio/usePortfolio";
 import { WalletTable } from "../../../components/WalletTable";
 import { MonobankTable } from "../../../components/MonobankTable";
+import { ChatPopup } from "../../../components/ChatPopup";
 
 export function PortfolioScreen() {
   const portfolio = usePortfolio();
@@ -68,93 +69,97 @@ export function PortfolioScreen() {
   };
 
   return (
-    <Box style={{ display: "flex", padding: "10px", height: "100%" }}>
-      <Box style={{ flexBasis: "30%" }}>
-        <Typography variant="h6" mt={2}>
-          My portfolios{" "}
-          {portfolio.length > 0 ? <>({portfolio.length})</> : <></>}
-        </Typography>
+    <>
+      <Box style={{ display: "flex", padding: "10px", height: "100%" }}>
+        <Box style={{ flexBasis: "30%" }}>
+          <Typography variant="h6" mt={2}>
+            My portfolios{" "}
+            {portfolio.length > 0 ? <>({portfolio.length})</> : <></>}
+          </Typography>
 
-        <Box>
-          {portfolio.map((item, index) => (
-            <Box
-              key={index}
-              display="flex"
-              alignItems="center"
-              justifyContent="space-between"
-              mb={2}
-              p={1}
-              style={{
-                backgroundColor:
-                  selectedTab === index ? "#e0e0e0" : "transparent",
-                borderRadius: "8px",
-                cursor: "pointer",
-              }}
-              onClick={() => handleTabChange(index)}
-            >
-              <Typography ml={2}>
-                {item.type === "wallet"
-                  ? formatAddress(item.accountAddress)
-                  : item.monobankName}
-              </Typography>
-              <IconButton
-                onClick={(event) => handleMenuClick(event, item)}
-                size="small"
+          <Box>
+            {portfolio.map((item, index) => (
+              <Box
+                key={index}
+                display="flex"
+                alignItems="center"
+                justifyContent="space-between"
+                mb={2}
+                p={1}
+                style={{
+                  backgroundColor:
+                    selectedTab === index ? "#e0e0e0" : "transparent",
+                  borderRadius: "8px",
+                  cursor: "pointer",
+                }}
+                onClick={() => handleTabChange(index)}
               >
-                <MoreVertIcon />
-              </IconButton>
-            </Box>
-          ))}
+                <Typography ml={2}>
+                  {item.type === "wallet"
+                    ? formatAddress(item.accountAddress)
+                    : item.monobankName}
+                </Typography>
+                <IconButton
+                  onClick={(event) => handleMenuClick(event, item)}
+                  size="small"
+                >
+                  <MoreVertIcon />
+                </IconButton>
+              </Box>
+            ))}
+          </Box>
+
+          <Menu
+            anchorEl={anchorEl}
+            open={Boolean(anchorEl)}
+            onClose={handleMenuClose}
+          >
+            <MenuItem onClick={handleViewDetails}>View Wallet Details</MenuItem>
+          </Menu>
+
+          <Button
+            variant="contained"
+            color="primary"
+            fullWidth
+            onClick={() =>
+              openAddWalletModal({
+                onSuccess: () => {
+                  closeAddWalletModal();
+                },
+              })
+            }
+            style={{ marginTop: "20px" }}
+          >
+            Create portfolio
+          </Button>
         </Box>
 
-        <Menu
-          anchorEl={anchorEl}
-          open={Boolean(anchorEl)}
-          onClose={handleMenuClose}
+        <Box
+          style={{
+            flexBasis: "70%",
+            height: "100%",
+            display: "flex",
+            flexDirection: "column",
+            justifyContent: "center",
+            alignItems: "center",
+            marginLeft: "20px",
+          }}
         >
-          <MenuItem onClick={handleViewDetails}>View Wallet Details</MenuItem>
-        </Menu>
+          {portfolio.length > 0 && selectedPortfolioItem && (
+            <>
+              <Typography variant="h5" mt={2}>
+                {selectedPortfolioItem.type === "wallet"
+                  ? `Account address: ${selectedPortfolioItem.accountAddress}`
+                  : `Monobank Account: ${selectedPortfolioItem.monobankName}`}
+              </Typography>
 
-        <Button
-          variant="contained"
-          color="primary"
-          fullWidth
-          onClick={() =>
-            openAddWalletModal({
-              onSuccess: () => {
-                closeAddWalletModal();
-              },
-            })
-          }
-          style={{ marginTop: "20px" }}
-        >
-          Create portfolio
-        </Button>
+              {renderComponent()}
+            </>
+          )}
+        </Box>
       </Box>
 
-      <Box
-        style={{
-          flexBasis: "70%",
-          height: "100%",
-          display: "flex",
-          flexDirection: "column",
-          justifyContent: "center",
-          alignItems: "center",
-          marginLeft: "20px",
-        }}
-      >
-        {portfolio.length > 0 && selectedPortfolioItem && (
-          <>
-            <Typography variant="h5" mt={2}>
-              {selectedPortfolioItem.type === "wallet"
-                ? `Account address: ${selectedPortfolioItem.accountAddress}`
-                : `Monobank Account: ${selectedPortfolioItem.monobankName}`}
-            </Typography>
-
-            {renderComponent()}
-          </>
-        )}
-      </Box>
-    </Box>
+      <ChatPopup />
+    </>
   );
 }

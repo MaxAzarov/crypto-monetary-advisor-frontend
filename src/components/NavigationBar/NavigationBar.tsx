@@ -1,29 +1,50 @@
-import { Container } from "@material-ui/core";
-import { AppBar, Box, Toolbar, Typography } from "@mui/material";
-import { NavLink } from "react-router-dom";
-import { NavigationItemStyled } from "./NavigationBar.styled";
+import { useState } from "react";
+import {
+  AppBar,
+  Toolbar,
+  Typography,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogContentText,
+  DialogTitle,
+  Button,
+} from "@mui/material";
+import { NavLink, useNavigate } from "react-router-dom";
 import AccountCircle from "@mui/icons-material/AccountCircle";
 import { ROUTES } from "../../routing/routes";
+import {
+  StyledContainer,
+  NavLinksBox,
+  NavigationItemStyled,
+} from "./NavigationBar.styled";
+import { appStorage } from "../../services/appStorage";
 
 export const NavigationBar = () => {
+  const navigate = useNavigate();
+  const [open, setOpen] = useState(false);
+
+  const handleClickOpen = () => {
+    setOpen(true);
+  };
+
+  const handleClose = () => {
+    setOpen(false);
+  };
+
+  const handleLogout = () => {
+    appStorage.clearUserData();
+
+    navigate(ROUTES.login);
+
+    setOpen(false);
+  };
+
   return (
     <AppBar position="static" color="primary">
       <Toolbar>
-        <Container
-          style={{
-            display: "flex",
-            justifyContent: "space-between",
-            alignItems: "center",
-          }}
-        >
-          <Box
-            component="div"
-            sx={{
-              display: "flex",
-              justifyContent: "flex-start",
-              alignItems: "center",
-            }}
-          >
+        <StyledContainer>
+          <NavLinksBox>
             <NavLink
               to={ROUTES.dashboard}
               style={{ textDecoration: "none", color: "white" }}
@@ -51,10 +72,30 @@ export const NavigationBar = () => {
                 Portfolio
               </NavigationItemStyled>
             </NavLink>
-          </Box>
+          </NavLinksBox>
 
-          <AccountCircle />
-        </Container>
+          <AccountCircle
+            onClick={handleClickOpen}
+            style={{ cursor: "pointer" }}
+          />
+        </StyledContainer>
+
+        <Dialog open={open} onClose={handleClose}>
+          <DialogTitle>Logout</DialogTitle>
+          <DialogContent>
+            <DialogContentText>
+              Are you sure you want to log out?
+            </DialogContentText>
+          </DialogContent>
+          <DialogActions>
+            <Button onClick={handleClose} color="primary">
+              Cancel
+            </Button>
+            <Button onClick={handleLogout} color="primary">
+              Logout
+            </Button>
+          </DialogActions>
+        </Dialog>
       </Toolbar>
     </AppBar>
   );

@@ -6,5 +6,4 @@ export const ROUTES = {
   portfolio: "/portfolio",
   login: "/login",
   signup: "/signup",
-  setup: "/setup",
 };

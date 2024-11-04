@@ -1,7 +1,6 @@
 import { useEffect, useRef } from "react";
 import TextField, { TextFieldProps } from "@mui/material/TextField";
 import { FormikValues, useFormik, useFormikContext } from "formik";
-import get from "lodash/get";
 
 import { DebouncedTextField } from "./DebouncedTextField.component";
 
@@ -23,9 +22,9 @@ export function FormikTextField<T extends FormikValues = FormikValues>({
 }: IFormikTextField<T>) {
   const Component = useDebounce ? DebouncedTextField : TextField;
 
-  const value = get(formik.values, name);
-  const touched = get(formik.touched, name);
-  const error = get(formik.errors, name);
+  const value = formik.values?.[name];
+  const touched = formik.touched?.[name];
+  const error = formik.errors?.[name];
 
   const textFieldRef = useRef<HTMLDivElement>(null);
 
