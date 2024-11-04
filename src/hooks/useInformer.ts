@@ -1,22 +1,26 @@
 import { useEffect, useState } from "react";
-
 import { SnackbarKey, useSnackbar } from "notistack";
-import { Subject, Operator } from "react-declarative";
+import { Subject } from "rxjs";
+import { distinct } from "rxjs/operators";
 
-type TypeStatus = "train" | "upward" | "downward" | "untrained" | null;
+export type TypeStatus = "train" | "upward" | "downward" | "untrained" | null;
 
 export const useInformer = (source: Subject<TypeStatus>) => {
   const [type, setType] = useState<TypeStatus>("train");
 
   const { enqueueSnackbar, closeSnackbar } = useSnackbar();
 
-  useEffect(
-    () =>
-      source
-        .operator(Operator.distinct())
-        .connect((type: TypeStatus) => setType(type)),
-    [source]
-  );
+  useEffect(() => {
+    const subscription = source
+      .pipe(distinct())
+      .subscribe((type: TypeStatus) => {
+        setType(type);
+      });
+
+    return () => {
+      subscription.unsubscribe();
+    };
+  }, [source]);
 
   useEffect(() => {
     let key: SnackbarKey | null = null;

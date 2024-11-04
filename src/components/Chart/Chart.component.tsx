@@ -1,12 +1,4 @@
 import { useRef, useLayoutEffect } from "react";
-
-import {
-  TSubject,
-  Operator,
-  useSubject,
-  useReloadTrigger,
-} from "react-declarative";
-
 import {
   createChart,
   Time,
@@ -17,9 +9,12 @@ import {
 import { getTimeLabel } from "../../helpers/getTimeLabel";
 import { priceEmitter } from "../../sockets";
 import { trendEmitter } from "../../emitters/trendEmitter";
+import { Observable } from "rxjs";
+import { distinct, tap } from "rxjs/operators";
+import { TypeStatus } from "../../hooks/useInformer";
 
 interface IChartProps {
-  predictEmitter: TSubject<"train" | "upward" | "downward" | null>;
+  predictEmitter: Observable<TypeStatus>;
   height: number;
   width: number;
 }
@@ -73,13 +68,12 @@ const SERIES_OPTIONS = {
 } as const;
 
 export const Chart = ({ predictEmitter, height, width }: IChartProps) => {
-  const elementRef = useRef<HTMLDivElement>(undefined as never);
-
-  const predictChanged = useSubject(predictEmitter);
-  const { reloadTrigger } = useReloadTrigger(600_000);
+  const elementRef = useRef<HTMLDivElement>(null);
 
   useLayoutEffect(() => {
     const { current: chartElement } = elementRef;
+
+    if (!chartElement) return;
 
     const chart = createChart(chartElement, {
       ...CHART_OPTIONS,
@@ -92,15 +86,14 @@ export const Chart = ({ predictEmitter, height, width }: IChartProps) => {
     });
 
     let markers: SeriesMarker<Time>[] = [];
+    let lastPrice: number = 0;
 
     const updateMarkers = () => {
       markers = markers.slice(-10);
       priceSeries.setMarkers(markers);
     };
 
-    let lastPrice: number = 0;
-
-    const disconnectPriceEmitter = priceEmitter.connect((value) => {
+    const priceSubscription = priceEmitter.subscribe((value) => {
       lastPrice = value;
       priceSeries.update({ value, time: Date.now() as UTCTimestamp });
     });
@@ -114,7 +107,7 @@ export const Chart = ({ predictEmitter, height, width }: IChartProps) => {
       title: "",
     });
 
-    const disconnectTrendEmitter = trendEmitter.connect(({ trend }) => {
+    const trendSubscription = trendEmitter.subscribe(({ trend }) => {
       if (trend === 1 || trend === -1) {
         markers = markers.filter(({ position }) => position !== "inBar");
         markers.push({
@@ -128,56 +121,56 @@ export const Chart = ({ predictEmitter, height, width }: IChartProps) => {
       updateMarkers();
     });
 
-    const disconnectPredictEmitter = predictChanged
-      .operator(Operator.distinct())
-      .tap(() => disconnectTrendEmitter())
-      .connect((trend: string) => {
-        const date = new Date();
-        if (trend === "upward") {
-          line.applyOptions({
-            title: `Raise predict ${getTimeLabel(date)}`,
-            color: "#00a73e",
-            price: lastPrice,
-          });
-          markers.push({
-            time: Date.now() as Time,
-            position: "belowBar",
-            color: "#00a73e",
-            shape: "arrowUp",
-            text: "Upward",
-          });
-        }
-        if (trend === "downward") {
-          line.applyOptions({
-            title: `Fail predict ${getTimeLabel(date)}`,
-            color: "#e4000b",
-            price: lastPrice,
-          });
-          markers.push({
-            time: Date.now() as Time,
-            position: "aboveBar",
-            color: "#e4000b",
-            shape: "arrowDown",
-            text: "Downward",
-          });
-        }
-        if (trend === "train") {
-          line.applyOptions({
-            title: "",
-            color: "transparent",
-            price: 0,
-          });
-        }
-        updateMarkers();
-      });
+    const predictSubscription = predictEmitter
+      .pipe(
+        distinct(), // Ensure we only act on distinct predictions
+        tap((trend) => {
+          const date = new Date();
+          if (trend === "upward") {
+            line.applyOptions({
+              title: `Raise predict ${getTimeLabel(date)}`,
+              color: "#00a73e",
+              price: lastPrice,
+            });
+            markers.push({
+              time: Date.now() as Time,
+              position: "belowBar",
+              color: "#00a73e",
+              shape: "arrowUp",
+              text: "Upward",
+            });
+          } else if (trend === "downward") {
+            line.applyOptions({
+              title: `Fail predict ${getTimeLabel(date)}`,
+              color: "#e4000b",
+              price: lastPrice,
+            });
+            markers.push({
+              time: Date.now() as Time,
+              position: "aboveBar",
+              color: "#e4000b",
+              shape: "arrowDown",
+              text: "Downward",
+            });
+          } else if (trend === "train") {
+            line.applyOptions({
+              title: "",
+              color: "transparent",
+              price: 0,
+            });
+          }
+          updateMarkers();
+        })
+      )
+      .subscribe();
 
     return () => {
       chart.remove();
-      disconnectPriceEmitter();
-      disconnectPredictEmitter();
-      disconnectTrendEmitter();
+      priceSubscription.unsubscribe();
+      trendSubscription.unsubscribe();
+      predictSubscription.unsubscribe();
     };
-  }, [height, width, predictChanged, reloadTrigger]);
+  }, [height, width, predictEmitter]);
 
-  return <div ref={elementRef} />;
+  return <div ref={elementRef} style={{ height, width }} />;
 };
