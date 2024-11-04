@@ -41,7 +41,7 @@ const makeSlope = (data: number[]) => {
   };
 };
 
-export const calculateTrend = (data: number[]) => {
+export const calculateTrend = (data: [number, number]): number => {
   const trendDirection = makeSlope(data).sign;
   console.log(`last trend direction: ${trendDirection}`);
   return trendDirection;

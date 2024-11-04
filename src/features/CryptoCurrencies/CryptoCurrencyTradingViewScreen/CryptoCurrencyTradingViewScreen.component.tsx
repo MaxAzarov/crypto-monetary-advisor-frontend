@@ -1,10 +1,8 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { useEffect, useRef } from "react";
-import { AutoSizer, sleep } from "react-declarative";
+import { useEffect, useRef, useState } from "react";
 import { NeuralNetwork } from "brain.js";
 import { getTimeLabel } from "../../../helpers/getTimeLabel";
 import { CC_MAX_TRAIN_ERROR, CC_NET_TICK } from "../../../constants/params";
-import netEmitter from "../../../emitters/netEmitter";
 import { predictEmitter } from "../../../emitters/predictEmitter";
 import useInformer from "../../../hooks/useInformer";
 import { Chart } from "../../../components/Chart";
@@ -18,6 +16,8 @@ import {
   RootBox,
 } from "./CryptoCurrencyTradingViewScreen.styles";
 import netInputEmitter from "../../../emitters/netInputEmitter";
+import { distinct, take } from "rxjs/operators";
+import { neuralNetworkEmitter } from "../../../emitters/netEmitter";
 
 // eslint-disable-next-line @typescript-eslint/no-empty-object-type
 interface INet extends NeuralNetwork<any, any> {}
@@ -27,7 +27,7 @@ const getPrediction = async (net: INet): Promise<[number, number]> => {
   const netInput = await netInputEmitter.toPromise();
   console.log(`net predict run begin ${getTimeLabel(new Date())}`);
   console.time("net-run");
-  const [upward = 0, downward = 0] = Object.values(net.run(netInput));
+  const [upward = 0, downward = 0] = Object.values(net.run(netInput as any));
   console.timeEnd("net-run");
   return [upward, downward] as [number, number];
 };
@@ -35,11 +35,35 @@ const getPrediction = async (net: INet): Promise<[number, number]> => {
 export const CryptoCurrencyTradingViewScreen = () => {
   const params = useParams();
   const isMounted = useRef(false);
+  const chartRef = useRef<HTMLDivElement | null>(null);
+  const [dimensions, setDimensions] = useState({ width: 0, height: 0 });
 
   useEffect(() => {
     isMounted.current = true;
     return () => {
       isMounted.current = false;
+    };
+  }, []);
+
+  useEffect(() => {
+    const updateDimensions = () => {
+      if (chartRef.current) {
+        setDimensions({
+          width: chartRef.current.clientWidth,
+          height: chartRef.current.clientHeight,
+        });
+      }
+    };
+
+    // Initial dimension set
+    updateDimensions();
+
+    // Update dimensions on window resize
+    window.addEventListener("resize", updateDimensions);
+
+    // Cleanup on unmount
+    return () => {
+      window.removeEventListener("resize", updateDimensions);
     };
   }, []);
 
@@ -51,9 +75,10 @@ export const CryptoCurrencyTradingViewScreen = () => {
     );
   }, []);
 
-  useEffect(
-    () =>
-      netEmitter.once(({ net, status }) => {
+  useEffect(() => {
+    const subscription = neuralNetworkEmitter
+      .pipe(take(1))
+      .subscribe(({ net, status }) => {
         if (status.error > CC_MAX_TRAIN_ERROR) {
           predictEmitter.next("untrained");
           return;
@@ -61,12 +86,8 @@ export const CryptoCurrencyTradingViewScreen = () => {
 
         const process = async () => {
           let [prevUpward, prevDownward] = await getPrediction(net);
-          await sleep(10_000);
-          /**
-           * Caution: Black Magic
-           * this tool reacts to the change of delta of neural outputs instead
-           * of values. this makes the emit of action faster in times
-           */
+          await new Promise((resolve) => setTimeout(resolve, 10_000)); // Replacing sleep
+
           while (isMounted.current) {
             const [upward, downward] = await getPrediction(net);
             console.log(
@@ -80,23 +101,31 @@ export const CryptoCurrencyTradingViewScreen = () => {
             predictEmitter.next(result);
             prevUpward = upward;
             prevDownward = downward;
-            await sleep(CC_NET_TICK);
+            await new Promise((resolve) => setTimeout(resolve, CC_NET_TICK)); // Replacing sleep
           }
         };
 
         process();
         predictEmitter.next(null);
-      }),
-    []
-  );
+      });
 
-  useEffect(
-    () =>
-      netInputEmitter.connect(() => {
+    return () => {
+      subscription.unsubscribe(); // Cleanup on unmount
+    };
+  }, []);
+
+  useEffect(() => {
+    const netInputSubscription = netInputEmitter
+      .pipe(distinct())
+      .subscribe(() => {
         console.log(`netInputEmitter tick ${getTimeLabel(new Date())}`);
-      }),
-    []
-  );
+      });
+
+    // Cleanup subscription on unmount
+    return () => {
+      netInputSubscription.unsubscribe();
+    };
+  }, []);
 
   useEffect(() => {
     if (params.symbol) {
@@ -116,17 +145,13 @@ export const CryptoCurrencyTradingViewScreen = () => {
 
   return (
     <RootBox>
-      <ContainerBox>
+      <ContainerBox ref={chartRef}>
         <Card label={CARD_LABEL}>
-          <AutoSizer>
-            {({ height, width }) => (
-              <Chart
-                predictEmitter={predictEmitter}
-                height={height}
-                width={width}
-              />
-            )}
-          </AutoSizer>
+          <Chart
+            predictEmitter={predictEmitter}
+            height={dimensions.height}
+            width={dimensions.width}
+          />
         </Card>
       </ContainerBox>
       <AdjustBox />

@@ -1,5 +1,4 @@
-import { Subject } from "react-declarative";
+import { Subject } from "rxjs";
+import { TypeStatus } from "../hooks/useInformer";
 
-export const predictEmitter = new Subject<
-  "train" | "upward" | "downward" | "untrained" | null
->();
+export const predictEmitter = new Subject<TypeStatus>();

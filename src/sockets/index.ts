@@ -1,4 +1,4 @@
-import { Source } from "react-declarative";
+import { Subject } from "rxjs";
 import { io } from "socket.io-client";
 
 import { getTimeLabel } from "../helpers/getTimeLabel";
@@ -8,29 +8,27 @@ export const socket = io(`${Config.API_BASE_URL}/api/v1/socket`, {
   transports: ["websocket"],
 });
 
-export const priceEmitter = Source.multicast(() =>
-  Source.create<number>((next) => {
-    socket.on("connect", () => {
-      console.log(`Socket.io connected at ${getTimeLabel(new Date())}`);
-    });
+export const priceEmitter = new Subject<number>();
 
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    socket.on("candleData", (msg: any) => {
-      const price = parseFloat(msg);
-      next(price); // Emit the price to subscribers
-    });
+socket.on("connect", () => {
+  console.log(`Socket.io connected at ${getTimeLabel(new Date())}`);
+});
 
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    socket.on("connect_error", (error: any) => {
-      console.error("Socket.io connection error:", error);
-    });
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+socket.on("candleData", (msg: any) => {
+  const price = parseFloat(msg);
+  priceEmitter.next(price); // Emit the price to subscribers
+});
 
-    socket.on("disconnect", () => {
-      console.log(`Socket.io disconnected at ${getTimeLabel(new Date())}`);
-    });
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+socket.on("connect_error", (error: any) => {
+  console.error("Socket.io connection error:", error);
+});
 
-    return () => {
-      socket.disconnect(); // Clean up and close the connection
-    };
-  })
-);
+socket.on("disconnect", () => {
+  console.log(`Socket.io disconnected at ${getTimeLabel(new Date())}`);
+});
+
+export const cleanup = () => {
+  socket.disconnect();
+};
