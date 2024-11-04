@@ -1,45 +1,25 @@
-/* eslint-disable @typescript-eslint/no-empty-object-type */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { useEffect, useRef } from "react";
-
 import { AutoSizer, sleep } from "react-declarative";
-
 import { NeuralNetwork } from "brain.js";
-
-import Box from "@mui/material/Box";
-
 import { getTimeLabel } from "../../../helpers/getTimeLabel";
 import { CC_MAX_TRAIN_ERROR, CC_NET_TICK } from "../../../constants/params";
 import netInputEmitter from "../../../libs/source/netInputEmitter";
 import netEmitter from "../../../libs/source/netEmitter";
 import { predictEmitter } from "../../../emitters/predictEmitter";
 import useInformer from "../../../hooks/useInformer";
-import makeStyles from "../../../styles/makeStyles";
 import { Chart } from "../../../components/Chart";
 import { socket } from "../../../sockets";
 import { useParams } from "react-router-dom";
 import { pairs } from "../../../constants/tokens";
 import { Card } from "../../../components/Card";
+import {
+  AdjustBox,
+  ContainerBox,
+  RootBox,
+} from "./CryptoCurrencyTradingViewScreen.styles";
 
-const useStyles = makeStyles()(() => ({
-  root: {
-    width: "100%",
-    display: "flex",
-    padding: "10px",
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  container: {
-    height: "calc(100vh - 80px)",
-    width: "100%",
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  adjust: {
-    flex: 1,
-  },
-}));
-
+// eslint-disable-next-line @typescript-eslint/no-empty-object-type
 interface INet extends NeuralNetwork<any, any> {}
 
 const getPrediction = async (net: INet): Promise<[number, number]> => {
@@ -53,9 +33,7 @@ const getPrediction = async (net: INet): Promise<[number, number]> => {
 };
 
 export const CryptoCurrencyTradingViewScreen = () => {
-  const { classes } = useStyles();
   const params = useParams();
-
   const isMounted = useRef(false);
 
   useEffect(() => {
@@ -137,8 +115,8 @@ export const CryptoCurrencyTradingViewScreen = () => {
   const CARD_LABEL = `BINANCE ticker:${pair} HIGH candle 1M`;
 
   return (
-    <Box className={classes.root}>
-      <Box className={classes.container}>
+    <RootBox>
+      <ContainerBox>
         <Card label={CARD_LABEL}>
           <AutoSizer>
             {({ height, width }) => (
@@ -150,8 +128,8 @@ export const CryptoCurrencyTradingViewScreen = () => {
             )}
           </AutoSizer>
         </Card>
-      </Box>
-      <div className={classes.adjust} />
-    </Box>
+      </ContainerBox>
+      <AdjustBox />
+    </RootBox>
   );
 };

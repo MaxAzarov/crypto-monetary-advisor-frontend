@@ -17,7 +17,7 @@ import {
   StyledContainer,
   NavLinksBox,
   NavigationItemStyled,
-} from "./NavigationBar.styled";
+} from "./NavigationBar.styles";
 import { appStorage } from "../../services/appStorage";
 
 export const NavigationBar = () => {

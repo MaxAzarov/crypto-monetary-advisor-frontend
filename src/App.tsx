@@ -8,7 +8,6 @@ import { RecoilRoot } from "recoil";
 import { SnackbarProvider } from "notistack";
 import createCache from "@emotion/cache";
 import { CacheProvider } from "@emotion/react";
-import { TssCacheProvider } from "tss-react";
 
 const queryClient = new QueryClient({
   defaultOptions: { queries: { refetchOnWindowFocus: false, retry: 1 } },
@@ -21,27 +20,21 @@ const muiCache = createCache({
   prepend: true,
 });
 
-const tssCache = createCache({
-  key: "tss",
-});
-
 const App = () => {
   return (
     <RecoilRoot>
       <BrowserRouter>
         <CacheProvider value={muiCache}>
-          <TssCacheProvider value={tssCache}>
-            <QueryClientProvider client={queryClient}>
-              <ThemeProvider theme={theme}>
-                <SnackbarProvider maxSnack={MAX_SNACK}>
-                  <CssBaseline />
-                  <NavigationBar />
+          <QueryClientProvider client={queryClient}>
+            <ThemeProvider theme={theme}>
+              <SnackbarProvider maxSnack={MAX_SNACK}>
+                <CssBaseline />
+                <NavigationBar />
 
-                  <AppRoutes />
-                </SnackbarProvider>
-              </ThemeProvider>
-            </QueryClientProvider>
-          </TssCacheProvider>
+                <AppRoutes />
+              </SnackbarProvider>
+            </ThemeProvider>
+          </QueryClientProvider>
         </CacheProvider>
       </BrowserRouter>
     </RecoilRoot>
