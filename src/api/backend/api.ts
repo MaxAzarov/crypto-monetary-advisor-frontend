@@ -4,12 +4,14 @@ import { Config } from "../../config";
 import { createWalletsApi } from "./wallets/walletsApi";
 import { createAxiosInstance, GetApiFunc } from "./base";
 import { createMonobankApi } from "./monobankClients/monobankClientsApi";
+import { createOpenAiApi } from "./openai/openAiApi";
 
 function createApi(getAxiosInstance: GetApiFunc) {
   return {
     ...createAuthApi(getAxiosInstance),
     ...createWalletsApi(getAxiosInstance),
     ...createMonobankApi(getAxiosInstance),
+    ...createOpenAiApi(getAxiosInstance),
   };
 }
 

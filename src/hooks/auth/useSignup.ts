@@ -4,9 +4,12 @@ import { AxiosError } from "axios";
 
 import { ROUTES } from "../../routing/routes";
 import { Api } from "../../api/backend/api";
-import { SignupRequest, SignupResponse } from "../../api/auth/signUp/apiTypes";
 import { APIErrorResponse } from "../../api/commonTypes/api";
 import { useNotify } from "../../components/SnackbarAlert";
+import {
+  SignupRequest,
+  SignupResponse,
+} from "../../api/backend/auth/signUp/apiTypes";
 
 export const useSignup = () => {
   const notify = useNotify();

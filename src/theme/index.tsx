@@ -1,6 +1,6 @@
 import { createTheme } from "@mui/material";
 import { css, GlobalStyles as MUIGlobalStyles } from "@mui/material";
-import { grey } from "@mui/material/colors";
+// import { grey } from "@mui/material/colors";
 
 // eslint-disable-next-line react-refresh/only-export-components
 export const COLORS = {
@@ -28,17 +28,17 @@ const GRADIENTS = {
 
 export const TOPBAR_HEIGHT = 80;
 
-const BACKGROUNDS = {
-  BUTTON_LINEAR: GRADIENTS.MAIN,
-  BUTTON: COLORS.APP_BLUE,
-};
+// const BACKGROUNDS = {
+//   BUTTON_LINEAR: GRADIENTS.MAIN,
+//   BUTTON: COLORS.APP_BLUE,
+// };
 
-const SHADOWS = {
-  INPUT:
-    "inset 0px 1px 2px rgba(0, 0, 0, 0.05), inset 0px 5px 20px rgba(0, 0, 0, 0.03)",
-  BUTTON: "0px 6px 12px rgba(0, 0, 0, 0.03)",
-  TOP_BLOCK: "0px 10px 42px rgba(34, 60, 81, 0.07)",
-};
+// const SHADOWS = {
+//   INPUT:
+//     "inset 0px 1px 2px rgba(0, 0, 0, 0.05), inset 0px 5px 20px rgba(0, 0, 0, 0.03)",
+//   BUTTON: "0px 6px 12px rgba(0, 0, 0, 0.03)",
+//   TOP_BLOCK: "0px 10px 42px rgba(34, 60, 81, 0.07)",
+// };
 
 // eslint-disable-next-line react-refresh/only-export-components
 export const theme = createTheme({
@@ -112,273 +112,273 @@ export const theme = createTheme({
     },
   },
 
-  components: {
-    MuiTextField: {
-      defaultProps: {
-        variant: "standard",
-        margin: "normal",
-      },
-    },
-    MuiInput: {
-      defaultProps: {
-        disableUnderline: true,
-      },
-      styleOverrides: {
-        input: {
-          "::placeholder": {
-            color: COLORS.INPUT_PLACEHOLDER,
-          },
-          "&[type=number]": {
-            MozAppearance: "textfield",
-          },
-          "&::-webkit-outer-spin-button": {
-            WebkitAppearance: "none",
-            margin: 0,
-          },
-          "&::-webkit-inner-spin-button": {
-            WebkitAppearance: "none",
-            margin: 0,
-          },
-        },
-      },
-    },
-    MuiFormHelperText: {
-      styleOverrides: {
-        root: {
-          paddingLeft: "15px",
-        },
-      },
-    },
-    MuiInputLabel: {
-      defaultProps: {
-        shrink: true,
-      },
-      styleOverrides: {
-        root: {
-          top: "-5px",
-          left: "15px",
-          fontStyle: "normal",
-          fontWeight: "600",
-          fontFamily: "Work Sans",
-          color: COLORS.TEXT_PRIMARY,
-        },
-      },
-    },
-    MuiInputBase: {
-      styleOverrides: {
-        root: {
-          borderRadius: "15px",
+  // components: {
+  //   MuiTextField: {
+  //     defaultProps: {
+  //       variant: "standard",
+  //       margin: "normal",
+  //     },
+  //   },
+  //   MuiInput: {
+  //     defaultProps: {
+  //       disableUnderline: true,
+  //     },
+  //     styleOverrides: {
+  //       input: {
+  //         "::placeholder": {
+  //           color: COLORS.INPUT_PLACEHOLDER,
+  //         },
+  //         "&[type=number]": {
+  //           MozAppearance: "textfield",
+  //         },
+  //         "&::-webkit-outer-spin-button": {
+  //           WebkitAppearance: "none",
+  //           margin: 0,
+  //         },
+  //         "&::-webkit-inner-spin-button": {
+  //           WebkitAppearance: "none",
+  //           margin: 0,
+  //         },
+  //       },
+  //     },
+  //   },
+  //   MuiFormHelperText: {
+  //     styleOverrides: {
+  //       root: {
+  //         paddingLeft: "15px",
+  //       },
+  //     },
+  //   },
+  //   MuiInputLabel: {
+  //     defaultProps: {
+  //       shrink: true,
+  //     },
+  //     styleOverrides: {
+  //       root: {
+  //         top: "-5px",
+  //         left: "15px",
+  //         fontStyle: "normal",
+  //         fontWeight: "600",
+  //         fontFamily: "Work Sans",
+  //         color: COLORS.TEXT_PRIMARY,
+  //       },
+  //     },
+  //   },
+  //   MuiInputBase: {
+  //     styleOverrides: {
+  //       root: {
+  //         borderRadius: "15px",
 
-          "& .MuiSelect-icon": {
-            right: "10px",
-          },
-        },
-        input: {
-          backgroundColor: COLORS.INPUT_BACKGROUND_GREY,
-          borderRadius: "15px",
-          color: COLORS.TEXT_PRIMARY,
-          height: "1.25em",
-          padding: "14px 12px 14px 15px",
-          "::placeholder": {
-            color: COLORS.INPUT_PLACEHOLDER,
-          },
-          boxShadow: SHADOWS.INPUT,
+  //         "& .MuiSelect-icon": {
+  //           right: "10px",
+  //         },
+  //       },
+  //       input: {
+  //         backgroundColor: COLORS.INPUT_BACKGROUND_GREY,
+  //         borderRadius: "15px",
+  //         color: COLORS.TEXT_PRIMARY,
+  //         height: "1.25em",
+  //         padding: "14px 12px 14px 15px",
+  //         "::placeholder": {
+  //           color: COLORS.INPUT_PLACEHOLDER,
+  //         },
+  //         boxShadow: SHADOWS.INPUT,
 
-          ":invalid": {
-            boxShadow: SHADOWS.INPUT,
-          },
-        },
-        inputSizeSmall: {
-          padding: "11px 12px 11px 15px",
-          height: "1em",
-        },
-      },
-    },
-    MuiButton: {
-      defaultProps: {
-        variant: "contained",
-      },
-      styleOverrides: {
-        contained: {
-          background: BACKGROUNDS.BUTTON_LINEAR,
-          boxShadow: SHADOWS.BUTTON,
+  //         ":invalid": {
+  //           boxShadow: SHADOWS.INPUT,
+  //         },
+  //       },
+  //       inputSizeSmall: {
+  //         padding: "11px 12px 11px 15px",
+  //         height: "1em",
+  //       },
+  //     },
+  //   },
+  //   MuiButton: {
+  //     defaultProps: {
+  //       variant: "contained",
+  //     },
+  //     styleOverrides: {
+  //       contained: {
+  //         background: BACKGROUNDS.BUTTON_LINEAR,
+  //         boxShadow: SHADOWS.BUTTON,
 
-          ":disabled": {
-            opacity: 0.75,
-            color: "white",
-          },
-        },
-        sizeMedium: {
-          borderRadius: "10px",
-        },
-        sizeLarge: {
-          padding: "10px 22px",
-        },
-      },
-    },
+  //         ":disabled": {
+  //           opacity: 0.75,
+  //           color: "white",
+  //         },
+  //       },
+  //       sizeMedium: {
+  //         borderRadius: "10px",
+  //       },
+  //       sizeLarge: {
+  //         padding: "10px 22px",
+  //       },
+  //     },
+  //   },
 
-    MuiTooltip: {
-      defaultProps: {
-        placement: "top",
-      },
-      styleOverrides: {
-        tooltip: {
-          fontSize: 12,
-          background: "#303E65",
-        },
-      },
-    },
+  //   MuiTooltip: {
+  //     defaultProps: {
+  //       placement: "top",
+  //     },
+  //     styleOverrides: {
+  //       tooltip: {
+  //         fontSize: 12,
+  //         background: "#303E65",
+  //       },
+  //     },
+  //   },
 
-    MuiSnackbar: {
-      defaultProps: {
-        anchorOrigin: { horizontal: "right", vertical: "bottom" },
-      },
-    },
+  //   MuiSnackbar: {
+  //     defaultProps: {
+  //       anchorOrigin: { horizontal: "right", vertical: "bottom" },
+  //     },
+  //   },
 
-    MuiDialog: {
-      styleOverrides: {
-        paper: {
-          borderRadius: "20px",
-          boxShadow: "0px 10px 42px rgba(34, 60, 81, 0.07)",
-        },
-        root: {
-          "& .MuiBackdrop-root": {
-            background: "rgba(229, 234, 245, 0.8)",
-          },
-        },
-      },
-    },
+  //   MuiDialog: {
+  //     styleOverrides: {
+  //       paper: {
+  //         borderRadius: "20px",
+  //         boxShadow: "0px 10px 42px rgba(34, 60, 81, 0.07)",
+  //       },
+  //       root: {
+  //         "& .MuiBackdrop-root": {
+  //           background: "rgba(229, 234, 245, 0.8)",
+  //         },
+  //       },
+  //     },
+  //   },
 
-    MuiPopover: {
-      styleOverrides: {
-        paper: {
-          borderRadius: "10px",
-          boxShadow: "0px 10px 42px rgba(34, 60, 81, 0.07)",
-          border: `1px solid ${COLORS.BORDER_COLOR}`,
-        },
-      },
-    },
+  //   MuiPopover: {
+  //     styleOverrides: {
+  //       paper: {
+  //         borderRadius: "10px",
+  //         boxShadow: "0px 10px 42px rgba(34, 60, 81, 0.07)",
+  //         border: `1px solid ${COLORS.BORDER_COLOR}`,
+  //       },
+  //     },
+  //   },
 
-    MuiDrawer: {
-      styleOverrides: {
-        paper: {
-          boxShadow: "0px 10px 42px rgba(34, 60, 81, 0.07)",
-        },
-        root: {
-          "& .MuiBackdrop-root": {
-            background: "rgba(229, 234, 245, 0.8)",
-          },
-        },
-      },
-    },
+  //   MuiDrawer: {
+  //     styleOverrides: {
+  //       paper: {
+  //         boxShadow: "0px 10px 42px rgba(34, 60, 81, 0.07)",
+  //       },
+  //       root: {
+  //         "& .MuiBackdrop-root": {
+  //           background: "rgba(229, 234, 245, 0.8)",
+  //         },
+  //       },
+  //     },
+  //   },
 
-    MuiMenu: {
-      styleOverrides: {
-        root: {
-          "& .MuiPaper-root": {
-            boxShadow: "0px 10px 42px rgba(34, 60, 81, 0.07)",
-          },
-        },
-      },
-    },
+  //   MuiMenu: {
+  //     styleOverrides: {
+  //       root: {
+  //         "& .MuiPaper-root": {
+  //           boxShadow: "0px 10px 42px rgba(34, 60, 81, 0.07)",
+  //         },
+  //       },
+  //     },
+  //   },
 
-    MuiSelect: {
-      styleOverrides: {
-        select: {
-          backgroundColor: COLORS.INPUT_BACKGROUND_GREY,
-          borderRadius: "15px",
-        },
-      },
-      defaultProps: {
-        MenuProps: {
-          PaperProps: {
-            sx: { maxHeight: 250 },
-          },
-        },
-      },
-    },
+  //   MuiSelect: {
+  //     styleOverrides: {
+  //       select: {
+  //         backgroundColor: COLORS.INPUT_BACKGROUND_GREY,
+  //         borderRadius: "15px",
+  //       },
+  //     },
+  //     defaultProps: {
+  //       MenuProps: {
+  //         PaperProps: {
+  //           sx: { maxHeight: 250 },
+  //         },
+  //       },
+  //     },
+  //   },
 
-    MuiTablePagination: {
-      defaultProps: {
-        rowsPerPageOptions: [10, 25, 50],
-      },
+  //   MuiTablePagination: {
+  //     defaultProps: {
+  //       rowsPerPageOptions: [10, 25, 50],
+  //     },
 
-      styleOverrides: {
-        root: {
-          "& .MuiToolbar-root .MuiInputBase-root .MuiSelect-icon": {
-            right: 0,
-          },
-        },
-      },
-    },
+  //     styleOverrides: {
+  //       root: {
+  //         "& .MuiToolbar-root .MuiInputBase-root .MuiSelect-icon": {
+  //           right: 0,
+  //         },
+  //       },
+  //     },
+  //   },
 
-    MuiSwitch: {
-      styleOverrides: {
-        root: {
-          width: 32,
-          height: 18,
-          padding: 0,
-          display: "flex",
+  //   MuiSwitch: {
+  //     styleOverrides: {
+  //       root: {
+  //         width: 32,
+  //         height: 18,
+  //         padding: 0,
+  //         display: "flex",
 
-          "&:active": {
-            "& .MuiSwitch-thumb": {
-              width: 15,
-            },
-            "& .MuiSwitch-switchBase.Mui-checked": {
-              transform: "translateX(9px)",
-            },
-          },
-        },
+  //         "&:active": {
+  //           "& .MuiSwitch-thumb": {
+  //             width: 15,
+  //           },
+  //           "& .MuiSwitch-switchBase.Mui-checked": {
+  //             transform: "translateX(9px)",
+  //           },
+  //         },
+  //       },
 
-        track: {
-          borderRadius: 18 / 2,
-          opacity: 1,
-          backgroundColor: grey[400],
-          boxSizing: "border-box",
-        },
+  //       track: {
+  //         borderRadius: 18 / 2,
+  //         opacity: 1,
+  //         backgroundColor: grey[400],
+  //         boxSizing: "border-box",
+  //       },
 
-        switchBase: {
-          padding: 3,
-          "&.Mui-checked": {
-            transform: "translateX(14px)",
-            color: "#fff",
+  //       switchBase: {
+  //         padding: 3,
+  //         "&.Mui-checked": {
+  //           transform: "translateX(14px)",
+  //           color: "#fff",
 
-            "& + .MuiSwitch-track": {
-              opacity: 1,
-              backgroundColor: COLORS.APP_BLUE,
-            },
-          },
-        },
+  //           "& + .MuiSwitch-track": {
+  //             opacity: 1,
+  //             backgroundColor: COLORS.APP_BLUE,
+  //           },
+  //         },
+  //       },
 
-        thumb: {
-          boxShadow: "0 2px 4px 0 rgb(0 35 11 / 20%)",
-          width: 12,
-          height: 12,
-          borderRadius: 6,
-          transition: "width 0.2s ease",
-        },
-      },
-    },
+  //       thumb: {
+  //         boxShadow: "0 2px 4px 0 rgb(0 35 11 / 20%)",
+  //         width: 12,
+  //         height: 12,
+  //         borderRadius: 6,
+  //         transition: "width 0.2s ease",
+  //       },
+  //     },
+  //   },
 
-    MuiAutocomplete: {
-      styleOverrides: {
-        root: {
-          "& .MuiFormControl-root .MuiInput-root": {
-            backgroundColor: "#f8faff",
-            borderRadius: "15px",
-            boxShadow:
-              "inset 0px 1px 2px rgb(0 0 0 / 5%), inset 0px 5px 20px rgb(0 0 0 / 3%)",
+  //   MuiAutocomplete: {
+  //     styleOverrides: {
+  //       root: {
+  //         "& .MuiFormControl-root .MuiInput-root": {
+  //           backgroundColor: "#f8faff",
+  //           borderRadius: "15px",
+  //           boxShadow:
+  //             "inset 0px 1px 2px rgb(0 0 0 / 5%), inset 0px 5px 20px rgb(0 0 0 / 3%)",
 
-            "& .MuiInput-input": {
-              padding: "14px 12px 14px 15px",
-              boxShadow: "none",
-              background: "none",
-            },
-          },
-        },
-      },
-    },
-  },
+  //           "& .MuiInput-input": {
+  //             padding: "14px 12px 14px 15px",
+  //             boxShadow: "none",
+  //             background: "none",
+  //           },
+  //         },
+  //       },
+  //     },
+  //   },
+  // },
 });
 
 export const GlobalStyles = (
