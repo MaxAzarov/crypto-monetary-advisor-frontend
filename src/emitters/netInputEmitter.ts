@@ -1,9 +1,8 @@
 import { Operator, Source } from "react-declarative";
-
-import { percentDiff } from "../../helpers/percenDiff";
-import { toNeuralValue } from "../../helpers/toNeuralValue";
-import { CC_INPUT_SIZE, CC_PRICE_SLOPE_ADJUST } from "../../constants/params";
-import { priceEmitter } from "../../sockets";
+import { CC_INPUT_SIZE, CC_PRICE_SLOPE_ADJUST } from "../constants/params";
+import { priceEmitter } from "../sockets";
+import { percentDiff } from "../helpers/percenDiff";
+import { toNeuralValue } from "../helpers/toNeuralValue";
 
 const PAIRWISE_SIZE = CC_INPUT_SIZE + 1;
 

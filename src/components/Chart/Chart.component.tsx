@@ -16,7 +16,7 @@ import {
 } from "lightweight-charts";
 import { getTimeLabel } from "../../helpers/getTimeLabel";
 import { priceEmitter } from "../../sockets";
-import { trendEmitter } from "../../libs/source/trendEmitter";
+import { trendEmitter } from "../../emitters/trendEmitter";
 
 interface IChartProps {
   predictEmitter: TSubject<"train" | "upward" | "downward" | null>;

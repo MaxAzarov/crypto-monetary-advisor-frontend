@@ -2,10 +2,10 @@ import { Source, Operator } from "react-declarative";
 import {
   CC_PRICE_SLOPE_ADJUST,
   CC_TRAIN_WINDOW_SIZE,
-} from "../../constants/params";
-import { priceEmitter } from "../../sockets";
-import { getTimeLabel } from "../../helpers/getTimeLabel";
-import calculateTrend from "../../helpers/calculateTrend";
+} from "../constants/params";
+import { priceEmitter } from "../sockets";
+import { getTimeLabel } from "../helpers/getTimeLabel";
+import calculateTrend from "../helpers/calculateTrend";
 
 const TRAIN_PAIRWISE_SIZE = CC_TRAIN_WINDOW_SIZE + 1;
 

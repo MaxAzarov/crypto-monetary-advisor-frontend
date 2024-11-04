@@ -1,18 +1,18 @@
 import { Source, Operator } from "react-declarative";
 import { NeuralNetwork } from "brain.js";
 
-import { getTimeLabel } from "../../helpers/getTimeLabel";
-import { toNeuralValue } from "../../helpers/toNeuralValue";
-import { percentDiff } from "../../helpers/percenDiff";
+import { getTimeLabel } from "../helpers/getTimeLabel";
+import { toNeuralValue } from "../helpers/toNeuralValue";
+import { percentDiff } from "../helpers/percenDiff";
 import { trendEmitter } from "./trendEmitter";
-import { netManager, trainManager } from "./schema";
-import { filterBullRun } from "../../helpers/calculateTrend";
+import { netManager, trainManager } from "../libs/source/schema";
+import { filterBullRun } from "../helpers/calculateTrend";
 import {
   CC_INPUT_SIZE,
   CC_STRIDE_STEP,
   CC_TRAIN_TARGET_SIZE,
   CC_TRAIN_WINDOW_SIZE,
-} from "../../constants/params";
+} from "../constants/params";
 
 const positiveSetEmitter = Source.multicast<number[][]>(() =>
   trendEmitter

@@ -22,9 +22,9 @@ export const COLORS = {
   BORDER_COLOR: "#E5EAF5",
 };
 
-const GRADIENTS = {
-  MAIN: `linear-gradient(180deg, ${COLORS.APP_BLUE_DARK} 0%, ${COLORS.APP_BLUE_LIGHT} 100%)`,
-};
+// const GRADIENTS = {
+//   MAIN: `linear-gradient(180deg, ${COLORS.APP_BLUE_DARK} 0%, ${COLORS.APP_BLUE_LIGHT} 100%)`,
+// };
 
 export const TOPBAR_HEIGHT = 80;
 

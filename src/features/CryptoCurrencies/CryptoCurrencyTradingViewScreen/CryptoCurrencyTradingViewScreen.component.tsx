@@ -4,8 +4,7 @@ import { AutoSizer, sleep } from "react-declarative";
 import { NeuralNetwork } from "brain.js";
 import { getTimeLabel } from "../../../helpers/getTimeLabel";
 import { CC_MAX_TRAIN_ERROR, CC_NET_TICK } from "../../../constants/params";
-import netInputEmitter from "../../../libs/source/netInputEmitter";
-import netEmitter from "../../../libs/source/netEmitter";
+import netEmitter from "../../../emitters/netEmitter";
 import { predictEmitter } from "../../../emitters/predictEmitter";
 import useInformer from "../../../hooks/useInformer";
 import { Chart } from "../../../components/Chart";
@@ -18,6 +17,7 @@ import {
   ContainerBox,
   RootBox,
 } from "./CryptoCurrencyTradingViewScreen.styles";
+import netInputEmitter from "../../../emitters/netInputEmitter";
 
 // eslint-disable-next-line @typescript-eslint/no-empty-object-type
 interface INet extends NeuralNetwork<any, any> {}
