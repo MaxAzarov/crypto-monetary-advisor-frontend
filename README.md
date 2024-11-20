@@ -1,50 +1,121 @@
-# React + TypeScript + Vite
+# React + TypeScript + Vite Project
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Frontend part of crypto monetary advisor
 
-Currently, two official plugins are available:
+## Node.js Version
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+This application requires **Node.js version 20.16.0** to run. Ensure you have this version installed for optimal compatibility.
 
-## Expanding the ESLint configuration
+---
 
-If you are developing a production application, we recommend updating the configuration to enable type aware lint rules:
+## Environment Configuration
 
-- Configure the top-level `parserOptions` property like this:
+The application uses an .env file to manage environment-specific configurations.
 
-```js
-export default tseslint.config({
-  languageOptions: {
-    // other options...
-    parserOptions: {
-      project: ['./tsconfig.node.json', './tsconfig.app.json'],
-      tsconfigRootDir: import.meta.dirname,
-    },
-  },
-})
+You can find an example of this configuration in .env.example.
+To set up your environment, copy .env.example to .env and fill in the required values before running the application.
+
+```bash
+$ cp .env.example .env
 ```
 
-- Replace `tseslint.configs.recommended` to `tseslint.configs.recommendedTypeChecked` or `tseslint.configs.strictTypeChecked`
-- Optionally add `...tseslint.configs.stylisticTypeChecked`
-- Install [eslint-plugin-react](https://github.com/jsx-eslint/eslint-plugin-react) and update the config:
+## Project setup
 
-```js
-// eslint.config.js
-import react from 'eslint-plugin-react'
+```bash
+$ npm install
+```
 
-export default tseslint.config({
-  // Set the react version
-  settings: { react: { version: '18.3' } },
-  plugins: {
-    // Add the react plugin
-    react,
-  },
-  rules: {
-    // other rules...
-    // Enable its recommended rules
-    ...react.configs.recommended.rules,
-    ...react.configs['jsx-runtime'].rules,
-  },
-})
+```bash
+npm run dev
+```
+
+The application will run at http://localhost:5173 by default.
+
+Project Scripts
+Development: Start the development server with hot reloading.
+
+```bash
+npm run dev
+```
+
+Build: Create a production-ready build of the application.
+
+```bash
+npm run build
+```
+
+Preview: Serve the production build locally for testing.
+
+```bash
+npm run preview
+```
+
+Lint: Run ESLint to analyze and fix code quality issues.
+
+```bash
+npm run lint
+```
+
+Type Check: Check for TypeScript type errors.
+
+```bash
+npm run type-check
+```
+
+Project Structure
+
+```bash
+
+📦 Project Root
+├── 📂 public # Stores static files like images, icons, fonts.
+├── 📂 src # Main application code.
+│ ├── 📂 api # API interaction logic (e.g., axios configurations).
+│ │ ├── 📂 backend # Backend API endpoints.
+│ │ ├── 📂 coingecko # Coingecko API endpoints.
+│ │ ├── 📂 auth # Authentication-related endpoints.
+│ ├── 📂 components # Reusable UI components.
+│ ├── 📂 constants # Application-wide constants.
+│ ├── 📂 contracts # Token contract configurations.
+│ ├── 📂 emitters # Event emitters for inter-component communication.
+│ ├── 📂 features # Functional modules organized by pages/features.
+│ ├── 📂 helpers # Utility functions for integrations.
+│ ├── 📂 hooks # Custom React hooks.
+│ ├── 📂 modals # Modal components used across the application.
+│ ├── 📂 routing # Application navigation and guards.
+│ │ ├── ProtectedRoute.tsx # Route guard for authenticated users.
+│ ├── 📂 services # Local storage services for API tokens.
+│ ├── 📂 sockets # WebSocket configurations for real-time data.
+│ ├── 📂 theme # Global theme configurations using Material UI.
+├── 📂 node_modules # Installed dependencies (auto-generated).
+├── .env # Environment variables.
+├── .env.example # Template for required environment variables.
+├── .gitignore # Ignored files for Git version control.
+├── eslint.config.js # ESLint configuration for code quality.
+├── index.html # Main entry point for the application.
+├── package.json # Project metadata and dependencies.
+├── package-lock.json # Locked versions of dependencies.
+├── README.md # Documentation for the project.
+├── tsconfig.app.json # Additional TypeScript configuration for the app.
+├── tsconfig.json # Main TypeScript configuration.
+├── tsconfig.node.json # TypeScript configuration for server-side code.
+└── vite.config.js # Vite configuration file.
+```
+
+Features and Highlights
+Vite: Fast and lightweight development server and build tool.
+React + TypeScript: A robust setup with type safety and modern React features.
+Material UI: Predefined themes and design system for consistent UI/UX.
+WebSockets: Real-time data fetching with sockets integration.
+API Services: Modular API interaction logic with structured Axios configurations.
+Build and Deployment
+Create a production build:
+
+```bash
+npm run build
+```
+
+Preview the production build locally:
+
+```bash
+npm run preview
 ```
